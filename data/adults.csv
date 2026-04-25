@@ -1,0 +1,44 @@
+id,name,relationship,email
+adult-1,Kelly Harris,Adult leader,kelly.harris@example.com
+adult-2,Matt Krok,Adult leader,matt.krok@example.com
+adult-3,Cristin Treaster,Adult leader,cristin.treaster@example.com
+adult-parent-guardian.boling,Guardian Boling,Guardian,jake.boling1@example.com
+adult-parent-boling.family.contact,Boling Family Contact,Guardian,jake.boling2@example.com
+adult-parent-parent.bukszar,Parent Bukszar,Parent,henry.bukszar1@example.com
+adult-parent-bukszar.family.contact,Bukszar Family Contact,Parent,henry.bukszar2@example.com
+adult-parent-parent.canterbury,Parent Canterbury,Parent,judah.canterbury1@example.com
+adult-parent-canterbury.family.contact,Canterbury Family Contact,Parent,judah.canterbury2@example.com
+adult-parent-guardian.chapman,Guardian Chapman,Guardian,corey.chapman1@example.com
+adult-parent-chapman.family.contact,Chapman Family Contact,Parent,corey.chapman2@example.com
+adult-parent-parent.coelho,Parent Coelho,Parent,noah.coelho1@example.com
+adult-parent-coelho.family.contact,Coelho Family Contact,Guardian,noah.coelho2@example.com
+adult-parent-parent.erby,Parent Erby,Parent,colin.erby1@example.com
+adult-parent-erby.family.contact,Erby Family Contact,Parent,neal.erby2@example.com
+adult-parent-guardian.erby,Guardian Erby,Guardian,neal.erby1@example.com
+adult-parent-guardian.grepps,Guardian Grepps,Guardian,lou.grepps1@example.com
+adult-parent-grepps.family.contact,Grepps Family Contact,Parent,lou.grepps2@example.com
+adult-parent-parent.harris,Parent Harris,Parent,jaime.harris1@example.com
+adult-parent-harris.family.contact,Harris Family Contact,Parent,jaime.harris2@example.com
+adult-parent-guardian.krok,Guardian Krok,Guardian,matthew.krok1@example.com
+adult-parent-krok.family.contact,Krok Family Contact,Parent,rachel.krok2@example.com
+adult-parent-parent.treaster,Parent Treaster,Parent,zachary.treaster1@example.com
+adult-parent-treaster.family.contact,Treaster Family Contact,Guardian,zachary.treaster2@example.com
+adult-parent-parent.flatley,Parent Flatley,Parent,bryce.flatley1@example.com
+adult-parent-flatley.family.contact,Flatley Family Contact,Parent,bryce.flatley2@example.com
+adult-parent-parent.giganti,Parent Giganti,Parent,austin.giganti1@example.com
+adult-parent-giganti.family.contact,Giganti Family Contact,Guardian,austin.giganti2@example.com
+adult-parent-parent.krok,Parent Krok,Parent,rachel.krok1@example.com
+adult-parent-parent.omotoso,Parent Omotoso,Parent,fortunate.omotoso1@example.com
+adult-parent-omotoso.family.contact,Omotoso Family Contact,Guardian,fortunate.omotoso2@example.com
+adult-parent-guardian.patterson,Guardian Patterson,Guardian,bennett.patterson1@example.com
+adult-parent-patterson.family.contact,Patterson Family Contact,Parent,bennett.patterson2@example.com
+adult-parent-parent.queen,Parent Queen,Parent,gabe.queen1@example.com
+adult-parent-queen.family.contact,Queen Family Contact,Parent,gabe.queen2@example.com
+adult-parent-parent.sarin,Parent Sarin,Parent,angad.sarin1@example.com
+adult-parent-sarin.family.contact,Sarin Family Contact,Parent,angad.sarin2@example.com
+adult-parent-guardian.seitz,Guardian Seitz,Guardian,bobby.seitz1@example.com
+adult-parent-seitz.family.contact,Seitz Family Contact,Guardian,will.seitz2@example.com
+adult-parent-parent.seitz,Parent Seitz,Parent,will.seitz1@example.com
+adult-parent-guardian.yosephine,Guardian Yosephine,Guardian,matthew.yosephine1@example.com
+adult-parent-yosephine.family.contact,Yosephine Family Contact,Parent,matthew.yosephine2@example.com
+adult-4,Julia Harris,Adult leader,julia.harris@example.com

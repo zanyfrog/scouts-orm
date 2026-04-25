@@ -1,0 +1,535 @@
+const fs = require("fs");
+const path = require("path");
+
+const root = __dirname;
+const dataDir = path.join(root, "data");
+const files = {
+  scouts: path.join(dataDir, "scouts.csv"),
+  adults: path.join(dataDir, "adults.csv"),
+  adultLeaders: path.join(dataDir, "adult_leaders.csv"),
+  adultScoutRelationships: path.join(dataDir, "adult_scout_relationships.csv"),
+  patrols: path.join(dataDir, "patrols.json"),
+  events: path.join(dataDir, "events.json"),
+  eventsImport: path.join(dataDir, "events.tsv"),
+};
+
+const scoutHeaders = ["id", "name", "gender", "patrol", "patrolBadge", "rank", "attendance", "leadershipRole"];
+const adultHeaders = ["id", "name", "relationship", "email"];
+const adultLeaderHeaders = ["adultId", "role"];
+const adultScoutRelationshipHeaders = ["adultId", "scoutId", "relationship", "priority"];
+
+function patrolBadgeKeyForPatrol(patrol) {
+  return String(patrol || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+const defaultScouts = [
+  ["scout-1", "Jake Boling", "not specified", "Python Patrol", patrolBadgeKeyForPatrol("Python Patrol"), "Scout", "Present", "Senior Patrol Leader"],
+  ["scout-2", "Henry Bukszar", "not specified", "Nuclear Meese", patrolBadgeKeyForPatrol("Nuclear Meese"), "Tenderfoot", "Present", "Assistant Senior Patrol Leader"],
+  ["scout-3", "Judah Canterbury", "not specified", "Flaming Arrows", patrolBadgeKeyForPatrol("Flaming Arrows"), "Second Class", "Present", "Patrol Leader"],
+  ["scout-4", "Corey Chapman", "not specified", "Senior", patrolBadgeKeyForPatrol("Senior"), "First Class", "Present", "Patrol Leader"],
+  ["scout-5", "Noah Coelho", "not specified", "Python Patrol", patrolBadgeKeyForPatrol("Python Patrol"), "Star", "Present", "Patrol Leader"],
+  ["scout-6", "Colin Erby", "not specified", "Nuclear Meese", patrolBadgeKeyForPatrol("Nuclear Meese"), "Scout", "Present", "Patrol Leader"],
+  ["scout-7", "Neal Erby", "not specified", "Flaming Arrows", patrolBadgeKeyForPatrol("Flaming Arrows"), "Tenderfoot", "Absent", "Assistant Patrol Leader"],
+  ["scout-8", "Bryce Flatley", "not specified", "Senior", patrolBadgeKeyForPatrol("Senior"), "Second Class", "Present", "Assistant Patrol Leader"],
+  ["scout-9", "Austin Giganti", "not specified", "Python Patrol", patrolBadgeKeyForPatrol("Python Patrol"), "First Class", "Present", "Assistant Patrol Leader"],
+  ["scout-10", "Lou Grepps", "not specified", "Nuclear Meese", patrolBadgeKeyForPatrol("Nuclear Meese"), "Star", "Present", "Assistant Patrol Leader"],
+  ["scout-11", "Charlotte Harris", "not specified", "Flaming Arrows", patrolBadgeKeyForPatrol("Flaming Arrows"), "Scout", "Present", "Scribe"],
+  ["scout-12", "Jaime Harris", "not specified", "Senior", patrolBadgeKeyForPatrol("Senior"), "Tenderfoot", "Absent", "Quartermaster"],
+  ["scout-13", "Matthew Krok", "not specified", "Python Patrol", patrolBadgeKeyForPatrol("Python Patrol"), "Second Class", "Present", "Historian"],
+  ["scout-14", "Rachel Krok", "not specified", "Nuclear Meese", patrolBadgeKeyForPatrol("Nuclear Meese"), "First Class", "Present", "Instructor"],
+  ["scout-15", "Fortunate Omotoso", "not specified", "Flaming Arrows", patrolBadgeKeyForPatrol("Flaming Arrows"), "Star", "Present", "Librarian"],
+  ["scout-16", "Bennett Patterson", "not specified", "Senior", patrolBadgeKeyForPatrol("Senior"), "Scout", "Present", "Chaplain Aide"],
+  ["scout-17", "Gabe Queen", "not specified", "Python Patrol", patrolBadgeKeyForPatrol("Python Patrol"), "Tenderfoot", "Present", "Webmaster"],
+  ["scout-18", "Angad Sarin", "not specified", "Nuclear Meese", patrolBadgeKeyForPatrol("Nuclear Meese"), "Second Class", "Absent", "Troop Guide"],
+  ["scout-19", "Bobby Seitz", "not specified", "Flaming Arrows", patrolBadgeKeyForPatrol("Flaming Arrows"), "First Class", "Present", ""],
+  ["scout-20", "Will Seitz", "not specified", "Senior", patrolBadgeKeyForPatrol("Senior"), "Star", "Present", ""],
+  ["scout-21", "Zachary Treaster", "not specified", "Python Patrol", patrolBadgeKeyForPatrol("Python Patrol"), "Scout", "Present", ""],
+  ["scout-22", "Matthew Yosephine", "not specified", "Nuclear Meese", patrolBadgeKeyForPatrol("Nuclear Meese"), "Tenderfoot", "Present", ""],
+];
+
+const defaultAdults = [
+  ["adult-1", "Kelly Harris", "Adult leader", "kelly.harris@example.com"],
+  ["adult-2", "Matt Krok", "Adult leader", "matt.krok@example.com"],
+  ["adult-3", "Cristin Treaster", "Adult leader", "cristin.treaster@example.com"],
+  ["adult-4", "Guardian Boling", "Guardian", "jake.boling1@example.com"],
+  ["adult-5", "Boling Family Contact", "Guardian", "jake.boling2@example.com"],
+  ["adult-6", "Parent Bukszar", "Parent", "henry.bukszar1@example.com"],
+  ["adult-7", "Bukszar Family Contact", "Parent", "henry.bukszar2@example.com"],
+  ["adult-8", "Parent Canterbury", "Parent", "judah.canterbury1@example.com"],
+  ["adult-9", "Canterbury Family Contact", "Parent", "judah.canterbury2@example.com"],
+  ["adult-10", "Guardian Chapman", "Guardian", "corey.chapman1@example.com"],
+  ["adult-11", "Chapman Family Contact", "Parent", "corey.chapman2@example.com"],
+  ["adult-12", "Parent Coelho", "Parent", "noah.coelho1@example.com"],
+  ["adult-13", "Coelho Family Contact", "Guardian", "noah.coelho2@example.com"],
+  ["adult-14", "Parent Erby", "Parent", "colin.erby1@example.com"],
+  ["adult-15", "Erby Family Contact", "Parent", "colin.erby2@example.com"],
+  ["adult-16", "Guardian Erby", "Guardian", "neal.erby1@example.com"],
+  ["adult-17", "Guardian Grepps", "Guardian", "lou.grepps1@example.com"],
+  ["adult-18", "Grepps Family Contact", "Parent", "lou.grepps2@example.com"],
+  ["adult-19", "Parent Harris", "Parent", "charlotte.harris1@example.com"],
+  ["adult-20", "Harris Family Contact", "Parent", "charlotte.harris2@example.com"],
+  ["adult-21", "Guardian Krok", "Guardian", "matthew.krok1@example.com"],
+  ["adult-22", "Krok Family Contact", "Guardian", "matthew.krok2@example.com"],
+  ["adult-23", "Parent Treaster", "Parent", "zachary.treaster1@example.com"],
+  ["adult-24", "Treaster Family Contact", "Guardian", "zachary.treaster2@example.com"],
+];
+
+const defaultAdultLeaders = [
+  ["adult-1", "Scoutmaster"],
+  ["adult-2", "Committee Chair"],
+  ["adult-3", "Assistant Scoutmaster"],
+];
+
+function buildAdultScoutRelationshipsFromRows(adultsRows, scoutsRows) {
+  const adultsByName = new Map(adultsRows.map((adult) => [adult.name, adult.id]));
+  const relationships = [];
+
+  scoutsRows.forEach((scout) => {
+    [
+      { adultName: scout.parent1Name, relationship: scout.parent1Relationship, priority: "1" },
+      { adultName: scout.parent2Name, relationship: scout.parent2Relationship, priority: "2" },
+    ]
+      .filter((entry) => entry.adultName)
+      .forEach((entry) => {
+        const adultId = adultsByName.get(entry.adultName);
+        if (adultId) {
+          relationships.push([adultId, scout.id, entry.relationship || "Parent", entry.priority]);
+        }
+      });
+  });
+
+  return relationships;
+}
+
+function buildPatrolsFromScoutRows(scoutRows) {
+  const seen = new Set();
+  return scoutRows
+    .map((scout) => {
+      const name = String(scout.patrol || "").trim();
+      if (!name) {
+        return null;
+      }
+      const key = name.toLowerCase();
+      if (seen.has(key)) {
+        return null;
+      }
+      seen.add(key);
+      return {
+        name,
+        badge: scout.patrolBadge || patrolBadgeKeyForPatrol(name),
+      };
+    })
+    .filter(Boolean);
+}
+
+function escapeCsv(value) {
+  const stringValue = String(value ?? "");
+  if (/[",\n\r]/.test(stringValue)) {
+    return `"${stringValue.replace(/"/g, '""')}"`;
+  }
+  return stringValue;
+}
+
+function parseCsvLine(line) {
+  const values = [];
+  let current = "";
+  let inQuotes = false;
+
+  for (let index = 0; index < line.length; index += 1) {
+    const char = line[index];
+    const next = line[index + 1];
+
+    if (char === '"' && inQuotes && next === '"') {
+      current += '"';
+      index += 1;
+      continue;
+    }
+
+    if (char === '"') {
+      inQuotes = !inQuotes;
+      continue;
+    }
+
+    if (char === "," && !inQuotes) {
+      values.push(current);
+      current = "";
+      continue;
+    }
+
+    current += char;
+  }
+
+  values.push(current);
+  return values;
+}
+
+function readCsv(filePath) {
+  const raw = fs.readFileSync(filePath, "utf8").trim();
+  if (!raw) {
+    return [];
+  }
+
+  const lines = raw.split(/\r?\n/);
+  const headers = parseCsvLine(lines[0]);
+  return lines.slice(1).filter(Boolean).map((line) => {
+    const values = parseCsvLine(line);
+    return headers.reduce((record, header, index) => {
+      record[header] = values[index] ?? "";
+      return record;
+    }, {});
+  });
+}
+
+function writeCsv(filePath, headers, rows) {
+  const content = [
+    headers.map(escapeCsv).join(","),
+    ...rows.map((row) => row.map(escapeCsv).join(",")),
+  ].join("\n");
+
+  fs.writeFileSync(filePath, `${content}\n`, "utf8");
+}
+
+function readJson(filePath, fallback = []) {
+  if (!fs.existsSync(filePath)) {
+    return fallback;
+  }
+
+  try {
+    return JSON.parse(fs.readFileSync(filePath, "utf8"));
+  } catch (error) {
+    return fallback;
+  }
+}
+
+function writeJson(filePath, value) {
+  fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, "utf8");
+}
+
+function parseDelimitedLine(line, delimiter = "\t") {
+  const values = [];
+  let current = "";
+  let inQuotes = false;
+
+  for (let index = 0; index < line.length; index += 1) {
+    const char = line[index];
+    const next = line[index + 1];
+
+    if (char === '"' && inQuotes && next === '"') {
+      current += '"';
+      index += 1;
+      continue;
+    }
+
+    if (char === '"') {
+      inQuotes = !inQuotes;
+      continue;
+    }
+
+    if (char === delimiter && !inQuotes) {
+      values.push(current);
+      current = "";
+      continue;
+    }
+
+    current += char;
+  }
+
+  values.push(current);
+  return values;
+}
+
+function readTsv(filePath) {
+  if (!fs.existsSync(filePath)) {
+    return [];
+  }
+
+  const raw = fs.readFileSync(filePath, "utf8").replace(/^\uFEFF/, "").trim();
+  if (!raw) {
+    return [];
+  }
+
+  const lines = raw.split(/\r?\n/).filter((line) => line.trim());
+  if (!lines.length) {
+    return [];
+  }
+
+  const headers = parseDelimitedLine(lines[0]);
+  return lines.slice(1).map((line) => {
+    const values = parseDelimitedLine(line);
+    return headers.reduce((record, header, index) => {
+      record[header] = values[index] ?? "";
+      return record;
+    }, {});
+  });
+}
+
+function slugifyEventTitle(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function parseImportedDate(value) {
+  const normalized = String(value || "").trim();
+  const match = normalized.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2})(?:\s+(\d{1,2}):(\d{2})\s*(AM|PM))?$/i);
+  if (!match) {
+    return null;
+  }
+
+  const month = Number(match[1]);
+  const day = Number(match[2]);
+  const year = 2000 + Number(match[3]);
+  let hours = Number(match[4] || 0);
+  const minutes = Number(match[5] || 0);
+  const meridiem = String(match[6] || "").toUpperCase();
+
+  if (meridiem === "PM" && hours < 12) hours += 12;
+  if (meridiem === "AM" && hours === 12) hours = 0;
+
+  return { year, month, day, hours, minutes, hasTime: Boolean(match[4]) };
+}
+
+function formatImportedDateLabel(start, end) {
+  if (!start) {
+    return "";
+  }
+
+  const startDate = new Date(start.year, start.month - 1, start.day, start.hours, start.minutes);
+  const endDate = end ? new Date(end.year, end.month - 1, end.day, end.hours, end.minutes) : null;
+  const sameDay = endDate
+    && start.year === end.year
+    && start.month === end.month
+    && start.day === end.day;
+  const dateOptions = { month: "short", day: "numeric", year: "numeric" };
+  const timeOptions = { hour: "numeric", minute: "2-digit" };
+  const startDateText = startDate.toLocaleDateString("en-US", dateOptions);
+
+  if (!endDate) {
+    return start.hasTime
+      ? `${startDateText}, ${startDate.toLocaleTimeString("en-US", timeOptions)}`
+      : startDateText;
+  }
+
+  if (sameDay) {
+    if (start.hasTime || end.hasTime) {
+      return `${startDateText}, ${startDate.toLocaleTimeString("en-US", timeOptions)}-${endDate.toLocaleTimeString("en-US", timeOptions)}`;
+    }
+    return startDateText;
+  }
+
+  const endDateText = endDate.toLocaleDateString("en-US", dateOptions);
+  return `${startDateText} - ${endDateText}`;
+}
+
+function importedDateToIso(value) {
+  if (!value) {
+    return "";
+  }
+
+  const base = `${value.year}-${String(value.month).padStart(2, "0")}-${String(value.day).padStart(2, "0")}`;
+  if (!value.hasTime) {
+    return base;
+  }
+
+  return `${base}T${String(value.hours).padStart(2, "0")}:${String(value.minutes).padStart(2, "0")}:00`;
+}
+
+function buildImportedEvents() {
+  const rows = readTsv(files.eventsImport);
+  const seen = new Set();
+  const imported = [];
+
+  rows.forEach((row, index) => {
+    const level = String(row.Level || "").trim();
+    const type = String(row.Type || "").trim();
+    const title = String(row.Title || "").trim();
+    const startRaw = String(row["Start Date"] || "").trim();
+    const endRaw = String(row["End Date"] || "").trim();
+    const location = String(row.Location || "").trim();
+    if (!title || !startRaw) {
+      return;
+    }
+
+    const dedupeKey = [level, type, title, startRaw, endRaw, location].join("|");
+    if (seen.has(dedupeKey)) {
+      return;
+    }
+    seen.add(dedupeKey);
+
+    const start = parseImportedDate(startRaw);
+    const end = parseImportedDate(endRaw || startRaw);
+    const startDate = importedDateToIso(start);
+    const endDate = importedDateToIso(end);
+    const category = type || "Event";
+    const audience = level || "Unit";
+    const prefix = audience && audience !== category ? `${audience} ${category}` : audience || category;
+
+    imported.push({
+      id: `${slugifyEventTitle(title) || "event"}-${index + 1}`,
+      title,
+      category,
+      startDate,
+      endDate,
+      dateLabel: formatImportedDateLabel(start, end),
+      location,
+      audience,
+      description: prefix ? `${prefix} event scheduled for ${location || "TBD"}.` : `Event scheduled for ${location || "TBD"}.`,
+      detailNote: "Imported from the historical troop event list.",
+      image: "",
+      gallery: [],
+      upcoming: Boolean(startDate) && new Date(startDate).getTime() >= new Date("2026-04-19T00:00:00-04:00").getTime(),
+    });
+  });
+
+  return imported.sort((a, b) => {
+    const aTime = a.startDate ? new Date(a.startDate).getTime() : 0;
+    const bTime = b.startDate ? new Date(b.startDate).getTime() : 0;
+    return aTime - bTime;
+  });
+}
+
+function ensureDataFiles() {
+  fs.mkdirSync(dataDir, { recursive: true });
+
+  if (!fs.existsSync(files.scouts)) {
+    writeCsv(files.scouts, scoutHeaders, defaultScouts);
+  } else {
+    const scoutRows = readCsv(files.scouts);
+    writeCsv(
+      files.scouts,
+      scoutHeaders,
+      scoutRows.map((scout) => [
+        scout.id,
+        scout.name,
+        scout.gender || "not specified",
+        scout.patrol || "Python Patrol",
+        scout.patrolBadge || patrolBadgeKeyForPatrol(scout.patrol || "Python Patrol"),
+        scout.rank || "Scout",
+        scout.attendance || "Present",
+        scout.leadershipRole || "",
+      ])
+    );
+  }
+
+  if (!fs.existsSync(files.adults)) {
+    writeCsv(files.adults, adultHeaders, defaultAdults);
+  }
+
+  if (!fs.existsSync(files.adultLeaders)) {
+    writeCsv(files.adultLeaders, adultLeaderHeaders, defaultAdultLeaders);
+  } else {
+    const adultLeaderRows = readCsv(files.adultLeaders);
+    writeCsv(
+      files.adultLeaders,
+      adultLeaderHeaders,
+      adultLeaderRows.map((adultLeader) => [adultLeader.adultId, adultLeader.role])
+    );
+  }
+
+  if (!fs.existsSync(files.adultScoutRelationships)) {
+    const adultsRows = readCsv(files.adults);
+    const scoutsRows = readCsv(files.scouts);
+    writeCsv(
+      files.adultScoutRelationships,
+      adultScoutRelationshipHeaders,
+      buildAdultScoutRelationshipsFromRows(adultsRows, scoutsRows)
+    );
+  }
+
+  if (!fs.existsSync(files.patrols)) {
+    const scoutRows = readCsv(files.scouts);
+    writeJson(files.patrols, buildPatrolsFromScoutRows(scoutRows));
+  }
+
+  if (!fs.existsSync(files.events)) {
+    writeJson(files.events, buildImportedEvents());
+  }
+}
+
+function getDataPayload() {
+  return {
+    scouts: readCsv(files.scouts),
+    adults: readCsv(files.adults),
+    adultLeaders: readCsv(files.adultLeaders),
+    adultScoutRelationships: readCsv(files.adultScoutRelationships),
+    patrols: readJson(files.patrols, []),
+    events: readJson(files.events, []),
+  };
+}
+
+function saveScouts(scouts) {
+  writeCsv(
+    files.scouts,
+    scoutHeaders,
+    scouts.map((scout) => [
+      scout.id,
+      scout.name,
+      scout.gender,
+      scout.patrol,
+      scout.patrolBadge,
+      scout.rank,
+      scout.attendance,
+      scout.leadershipRole,
+    ])
+  );
+}
+
+function saveAdults(adults) {
+  writeCsv(
+    files.adults,
+    adultHeaders,
+    adults.map((adult) => [adult.id, adult.name, adult.relationship, adult.email])
+  );
+}
+
+function saveAdultLeaders(adultLeaders) {
+  writeCsv(
+    files.adultLeaders,
+    adultLeaderHeaders,
+    adultLeaders.map((adultLeader) => [adultLeader.adultId, adultLeader.role])
+  );
+}
+
+function saveAdultScoutRelationships(adultScoutRelationships) {
+  writeCsv(
+    files.adultScoutRelationships,
+    adultScoutRelationshipHeaders,
+    adultScoutRelationships.map((relationship) => [
+      relationship.adultId,
+      relationship.scoutId,
+      relationship.relationship,
+      relationship.priority,
+    ])
+  );
+}
+
+function savePatrols(patrols) {
+  writeJson(
+    files.patrols,
+    patrols.map((patrol) => ({
+      name: patrol.name,
+      badge: patrol.badge,
+    }))
+  );
+}
+
+function saveEvents(events) {
+  writeJson(files.events, events);
+}
+
+module.exports = {
+  dataDir,
+  ensureDataFiles,
+  getDataPayload,
+  saveScouts,
+  saveAdults,
+  saveAdultLeaders,
+  saveAdultScoutRelationships,
+  savePatrols,
+  saveEvents,
+};
