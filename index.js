@@ -10,6 +10,7 @@ const files = {
   adultScoutRelationships: path.join(dataDir, "adult_scout_relationships.csv"),
   patrols: path.join(dataDir, "patrols.json"),
   events: path.join(dataDir, "events.json"),
+  eventImageReferences: path.join(dataDir, "event-image-references.json"),
   eventsImport: path.join(dataDir, "events.tsv"),
 };
 
@@ -206,6 +207,97 @@ function readJson(filePath, fallback = []) {
 
 function writeJson(filePath, value) {
   fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, "utf8");
+}
+
+function isImageSource(value) {
+  return typeof value === "string" && (/^data:image\//i.test(value) || /^https?:\/\//i.test(value));
+}
+
+function imageExtensionForSource(source) {
+  const dataUriMatch = String(source || "").match(/^data:image\/([a-z0-9.+-]+)[;,]/i);
+  if (dataUriMatch) {
+    const format = dataUriMatch[1].toLowerCase();
+    if (format === "jpeg") return "jpg";
+    if (format === "svg+xml") return "svg";
+    return format.replace(/[^a-z0-9]+/g, "") || "img";
+  }
+
+  try {
+    const url = new URL(String(source || ""));
+    const ext = path.extname(url.pathname || "").toLowerCase().replace(/^\./, "");
+    return ext || "img";
+  } catch (error) {
+    return "img";
+  }
+}
+
+function nextEventImageFilename(source, valueToFilename, usedFilenames) {
+  const existingFilename = valueToFilename.get(source);
+  if (existingFilename) {
+    return existingFilename;
+  }
+
+  const extension = imageExtensionForSource(source);
+  let index = valueToFilename.size + 1;
+
+  while (true) {
+    const filename = `event-image-${String(index).padStart(4, "0")}.${extension}`;
+    if (!usedFilenames.has(filename)) {
+      return filename;
+    }
+    index += 1;
+  }
+}
+
+function cloneGalleryItem(item) {
+  return {
+    ...item,
+    comments: Array.isArray(item?.comments) ? item.comments.map((comment) => ({ ...comment })) : [],
+    reactions: item?.reactions && typeof item.reactions === "object"
+      ? Object.fromEntries(
+        Object.entries(item.reactions).map(([key, value]) => [key, Array.isArray(value) ? [...value] : []])
+      )
+      : item?.reactions,
+  };
+}
+
+function buildEventImageReferences(events, existingImageReferences = {}) {
+  const references = existingImageReferences && typeof existingImageReferences === "object" ? { ...existingImageReferences } : {};
+  const valueToFilename = new Map(Object.entries(references).map(([filename, value]) => [value, filename]));
+  const usedFilenames = new Set(Object.keys(references));
+  let changed = false;
+
+  (Array.isArray(events) ? events : []).forEach((event) => {
+    const gallery = Array.isArray(event?.gallery) ? event.gallery.map((item) => cloneGalleryItem(item)) : [];
+
+    if (isImageSource(event?.image)) {
+      const filename = nextEventImageFilename(event.image, valueToFilename, usedFilenames);
+      references[filename] = event.image;
+      valueToFilename.set(event.image, filename);
+      usedFilenames.add(filename);
+      if (existingImageReferences[filename] !== event.image) {
+        changed = true;
+      }
+    }
+
+    gallery.forEach((item) => {
+      if (item.mediaType !== "image" || !isImageSource(item.src)) {
+        return;
+      }
+      const filename = nextEventImageFilename(item.src, valueToFilename, usedFilenames);
+      references[filename] = item.src;
+      valueToFilename.set(item.src, filename);
+      usedFilenames.add(filename);
+      if (existingImageReferences[filename] !== item.src) {
+        changed = true;
+      }
+    });
+  });
+
+  return {
+    imageReferences: references,
+    changed,
+  };
 }
 
 function parseDelimitedLine(line, delimiter = "\t") {
@@ -449,6 +541,13 @@ function ensureDataFiles() {
   if (!fs.existsSync(files.events)) {
     writeJson(files.events, buildImportedEvents());
   }
+
+  const storedEvents = readJson(files.events, []);
+  const storedEventImageReferences = readJson(files.eventImageReferences, {});
+  const eventImageReferences = buildEventImageReferences(storedEvents, storedEventImageReferences);
+  if (eventImageReferences.changed || !fs.existsSync(files.eventImageReferences)) {
+    writeJson(files.eventImageReferences, eventImageReferences.imageReferences);
+  }
 }
 
 function getDataPayload() {
@@ -520,6 +619,9 @@ function savePatrols(patrols) {
 
 function saveEvents(events) {
   writeJson(files.events, events);
+
+  const eventImageReferences = buildEventImageReferences(events, readJson(files.eventImageReferences, {}));
+  writeJson(files.eventImageReferences, eventImageReferences.imageReferences);
 }
 
 module.exports = {
