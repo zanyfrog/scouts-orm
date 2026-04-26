@@ -1,4 +1,4 @@
-﻿adultId,scoutId,relationship,priority
+adultId,scoutId,relationship,priority
 adult-parent-guardian.boling,scout-1,Guardian,1
 adult-parent-boling.family.contact,scout-1,Guardian,2
 adult-parent-parent.bukszar,scout-2,Parent,1
@@ -20,9 +20,7 @@ adult-parent-giganti.family.contact,scout-9,Guardian,2
 adult-parent-guardian.grepps,scout-10,Guardian,1
 adult-parent-grepps.family.contact,scout-10,Parent,2
 adult-parent-parent.harris,scout-11,Parent,1
-adult-parent-harris.family.contact,scout-11,Parent,2
 adult-parent-parent.harris,scout-12,Parent,1
-adult-parent-harris.family.contact,scout-12,Parent,2
 adult-parent-guardian.krok,scout-13,Guardian,1
 adult-parent-krok.family.contact,scout-13,Guardian,2
 adult-parent-parent.krok,scout-14,Parent,1
@@ -43,3 +41,7 @@ adult-parent-parent.treaster,scout-21,Parent,1
 adult-parent-treaster.family.contact,scout-21,Guardian,2
 adult-parent-guardian.yosephine,scout-22,Guardian,1
 adult-parent-yosephine.family.contact,scout-22,Parent,2
+adult-4,scout-12,Parent,2
+adult-1,scout-11,Parent,2
+adult-1,scout-12,Parent,3
+adult-4,scout-11,Parent,3
