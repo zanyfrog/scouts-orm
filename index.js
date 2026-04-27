@@ -1,4 +1,4 @@
-const fs = require("fs");
+﻿const fs = require("fs");
 const path = require("path");
 
 const root = __dirname;
@@ -14,8 +14,10 @@ const files = {
   eventsImport: path.join(dataDir, "events.tsv"),
 };
 
-const scoutHeaders = ["id", "name", "gender", "patrol", "patrolBadge", "rank", "attendance", "leadershipRole"];
-const adultHeaders = ["id", "name", "relationship", "email"];
+const legacyDefaultScoutAvatarUrl = "https://i.pinimg.com/474x/24/99/03/249903173ee16b3346ba320a24e56a8b.jpg";
+const defaultScoutAvatarUrl = "assets/default-scout-avatar.svg";
+const scoutHeaders = ["id", "name", "firstName", "lastName", "nickname", "gender", "patrol", "patrolBadge", "rank", "leadershipRole", "avatar"];
+const adultHeaders = ["id", "name", "relationship", "email", "homePhone", "cellPhone"];
 const adultLeaderHeaders = ["adultId", "role"];
 const adultScoutRelationshipHeaders = ["adultId", "scoutId", "relationship", "priority"];
 
@@ -26,8 +28,29 @@ function patrolBadgeKeyForPatrol(patrol) {
     .replace(/^-+|-+$/g, "");
 }
 
+function splitScoutName(name) {
+  const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+  return { firstName: parts[0] || "", lastName: parts.slice(1).join(" ") };
+}
+
+function scoutFirstName(scout) {
+  return String(scout?.firstName || "").trim() || splitScoutName(scout?.name).firstName;
+}
+
+function scoutLastName(scout) {
+  return String(scout?.lastName || "").trim() || splitScoutName(scout?.name).lastName;
+}
+
+function scoutFullName(scout) {
+  return [scoutFirstName(scout), scoutLastName(scout)].filter(Boolean).join(" ") || String(scout?.name || "").trim();
+}
+
+function defaultNicknameForName(name) {
+  return String(name || "").trim().split(/\s+/)[0] || "";
+}
+
 const defaultScouts = [
-  ["scout-1", "Jake Boling", "not specified", "Python Patrol", patrolBadgeKeyForPatrol("Python Patrol"), "Scout", "Present", "Senior Patrol Leader"],
+  ["scout-1", "Jake Boling", "not specified", "Python Patrol", patrolBadgeKeyForPatrol("Python Patrol"), "Scout", "Present", "Senior Patrol Leader", defaultScoutAvatarUrl],
   ["scout-2", "Henry Bukszar", "not specified", "Nuclear Meese", patrolBadgeKeyForPatrol("Nuclear Meese"), "Tenderfoot", "Present", "Assistant Senior Patrol Leader"],
   ["scout-3", "Judah Canterbury", "not specified", "Flaming Arrows", patrolBadgeKeyForPatrol("Flaming Arrows"), "Second Class", "Present", "Patrol Leader"],
   ["scout-4", "Corey Chapman", "not specified", "Senior", patrolBadgeKeyForPatrol("Senior"), "First Class", "Present", "Patrol Leader"],
@@ -187,7 +210,7 @@ function readCsv(filePath) {
 function writeCsv(filePath, headers, rows) {
   const content = [
     headers.map(escapeCsv).join(","),
-    ...rows.map((row) => row.map(escapeCsv).join(",")),
+    ...rows.map((row) => headers.map((_, index) => escapeCsv(row[index] ?? "")).join(",")),
   ].join("\n");
 
   fs.writeFileSync(filePath, `${content}\n`, "utf8");
@@ -199,7 +222,7 @@ function readJson(filePath, fallback = []) {
   }
 
   try {
-    return JSON.parse(fs.readFileSync(filePath, "utf8"));
+    return JSON.parse(fs.readFileSync(filePath, "utf8").replace(/^\uFEFF/, ""));
   } catch (error) {
     return fallback;
   }
@@ -489,7 +512,23 @@ function ensureDataFiles() {
   fs.mkdirSync(dataDir, { recursive: true });
 
   if (!fs.existsSync(files.scouts)) {
-    writeCsv(files.scouts, scoutHeaders, defaultScouts);
+    writeCsv(
+      files.scouts,
+      scoutHeaders,
+      defaultScouts.map((scout) => [
+        scout[0],
+        scout[1],
+        splitScoutName(scout[1]).firstName,
+        splitScoutName(scout[1]).lastName,
+        defaultNicknameForName(scout[1]),
+        scout[2],
+        scout[3],
+        scout[4],
+        scout[5],
+        scout[7],
+        scout[8] || defaultScoutAvatarUrl,
+      ])
+    );
   } else {
     const scoutRows = readCsv(files.scouts);
     writeCsv(
@@ -497,13 +536,16 @@ function ensureDataFiles() {
       scoutHeaders,
       scoutRows.map((scout) => [
         scout.id,
-        scout.name,
+        scoutFullName(scout),
+        scoutFirstName(scout),
+        scoutLastName(scout),
+        scout.nickname || defaultNicknameForName(scoutFullName(scout)),
         scout.gender || "not specified",
         scout.patrol || "Python Patrol",
         scout.patrolBadge || patrolBadgeKeyForPatrol(scout.patrol || "Python Patrol"),
         scout.rank || "Scout",
-        scout.attendance || "Present",
         scout.leadershipRole || "",
+        scout.avatar && scout.avatar !== legacyDefaultScoutAvatarUrl ? scout.avatar : defaultScoutAvatarUrl,
       ])
     );
   }
@@ -567,13 +609,16 @@ function saveScouts(scouts) {
     scoutHeaders,
     scouts.map((scout) => [
       scout.id,
-      scout.name,
+      scoutFullName(scout),
+      scoutFirstName(scout),
+      scoutLastName(scout),
+      scout.nickname || defaultNicknameForName(scoutFullName(scout)),
       scout.gender,
       scout.patrol,
       scout.patrolBadge,
       scout.rank,
-      scout.attendance,
       scout.leadershipRole,
+      scout.avatar && scout.avatar !== legacyDefaultScoutAvatarUrl ? scout.avatar : defaultScoutAvatarUrl,
     ])
   );
 }
@@ -582,7 +627,7 @@ function saveAdults(adults) {
   writeCsv(
     files.adults,
     adultHeaders,
-    adults.map((adult) => [adult.id, adult.name, adult.relationship, adult.email])
+    adults.map((adult) => [adult.id, adult.name, adult.relationship, adult.email, adult.homePhone || "", adult.cellPhone || ""])
   );
 }
 
