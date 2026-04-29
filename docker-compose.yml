@@ -1,0 +1,15 @@
+services:
+  scouts-orm:
+    build: .
+    image: scouts-orm:latest
+    ports:
+      - "${PORT:-4175}:4174"
+    environment:
+      PORT: 4174
+      AUTH_BASE_URL: "${AUTH_BASE_URL:-http://host.docker.internal:3001}"
+    volumes:
+      - scouts-orm-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  scouts-orm-data:
