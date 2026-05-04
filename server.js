@@ -1,4 +1,6 @@
 const http = require("http");
+const fs = require("fs");
+const path = require("path");
 const orm = require("./index");
 
 const port = Number(process.env.PORT || 4174);
@@ -189,6 +191,46 @@ const openApiDocument = {
       },
     },
     "/api/events": {
+      get: {
+        operationId: "getEvents",
+        summary: "Get events by date range",
+        parameters: [
+          {
+            name: "startDate",
+            in: "query",
+            required: false,
+            schema: { type: "string", format: "date" },
+          },
+          {
+            name: "endDate",
+            in: "query",
+            required: false,
+            schema: { type: "string", format: "date" },
+          },
+          {
+            name: "page",
+            in: "query",
+            required: false,
+            schema: { type: "integer", minimum: 1, default: 1 },
+          },
+          {
+            name: "pageSize",
+            in: "query",
+            required: false,
+            schema: { type: "integer", minimum: 1, maximum: 100, default: 50 },
+          },
+        ],
+        responses: {
+          200: {
+            description: "A paginated list of events matching the date range.",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/EventPage" },
+              },
+            },
+          },
+        },
+      },
       post: {
         operationId: "replaceEvents",
         summary: "Replace events",
@@ -363,6 +405,33 @@ const openApiDocument = {
         },
         additionalProperties: true,
       },
+      EventPage: {
+        type: "object",
+        required: ["events", "pagination", "range"],
+        properties: {
+          events: {
+            type: "array",
+            items: { $ref: "#/components/schemas/Event" },
+          },
+          pagination: {
+            type: "object",
+            required: ["page", "pageSize", "total", "totalPages"],
+            properties: {
+              page: { type: "integer" },
+              pageSize: { type: "integer" },
+              total: { type: "integer" },
+              totalPages: { type: "integer" },
+            },
+          },
+          range: {
+            type: "object",
+            properties: {
+              startDate: { type: ["string", "null"] },
+              endDate: { type: ["string", "null"] },
+            },
+          },
+        },
+      },
       ErrorResponse: {
         type: "object",
         required: ["error"],
@@ -490,16 +559,16 @@ function scoutIdsForActor(actor) {
   return allowed;
 }
 
-function publicPayload() {
-  const data = orm.getDataPayload();
+async function publicPayload() {
+  const data = await orm.getDataPayload();
   return {
     events: data.events,
     patrols: data.patrols,
   };
 }
 
-function scopedPayload(actor) {
-  const data = orm.getDataPayload();
+async function scopedPayload(actor) {
+  const data = await orm.getDataPayload();
   const allowedScoutIds = scoutIdsForActor(actor);
   if (allowedScoutIds === null) {
     return data;
@@ -531,7 +600,24 @@ function canAccessScout(actor, scoutId) {
   return linkedScoutIds(actor).has(scoutId);
 }
 
+function contentTypeForMedia(filename) {
+  const extension = path.extname(filename).toLowerCase();
+  return {
+    ".avif": "image/avif",
+    ".gif": "image/gif",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".png": "image/png",
+    ".svg": "image/svg+xml",
+    ".webp": "image/webp",
+  }[extension] || "application/octet-stream";
+}
+
+const initialized = orm.ensureDataFiles();
+
 async function handleApi(req, res) {
+  await initialized;
+
   if (req.method === "GET" && req.url === "/openapi.json") {
     json(res, 200, openApiDocument);
     return true;
@@ -543,14 +629,49 @@ async function handleApi(req, res) {
   }
 
   if (req.method === "GET" && req.url === "/api/public") {
-    json(res, 200, publicPayload());
+    json(res, 200, await publicPayload());
+    return true;
+  }
+
+  if (req.method === "GET" && new URL(req.url, "http://localhost").pathname.startsWith("/api/event-media/")) {
+    const url = new URL(req.url, "http://localhost");
+    const filename = path.basename(decodeURIComponent(url.pathname.replace("/api/event-media/", "")));
+    const mediaPath = path.join(orm.dataDir, "event-media", filename);
+    if (!mediaPath.startsWith(path.join(orm.dataDir, "event-media")) || !fs.existsSync(mediaPath)) {
+      json(res, 404, { error: "Media not found" });
+      return true;
+    }
+    res.writeHead(200, {
+      "Content-Type": contentTypeForMedia(filename),
+      "Cache-Control": "public, max-age=31536000, immutable",
+    });
+    fs.createReadStream(mediaPath).pipe(res);
+    return true;
+  }
+
+  if (req.method === "GET" && new URL(req.url, "http://localhost").pathname.startsWith("/api/events/")) {
+    const url = new URL(req.url, "http://localhost");
+    const eventId = decodeURIComponent(url.pathname.replace("/api/events/", ""));
+    const event = await orm.getEventById(eventId, { includeMedia: url.searchParams.get("includeMedia") !== "false" });
+    json(res, event ? 200 : 404, event ? { event } : { error: "Event not found" });
+    return true;
+  }
+
+  if (req.method === "GET" && new URL(req.url, "http://localhost").pathname === "/api/events") {
+    const url = new URL(req.url, "http://localhost");
+    json(res, 200, await orm.getEvents({
+      startDate: url.searchParams.get("startDate") || "",
+      endDate: url.searchParams.get("endDate") || "",
+      page: url.searchParams.get("page") || 1,
+      pageSize: url.searchParams.get("pageSize") || 50,
+    }));
     return true;
   }
 
   if (req.method === "GET" && req.url === "/api/me/dashboard") {
     const actor = await requireActor(req, res, hasMemberAccess);
     if (!actor) return true;
-    json(res, 200, { actor, data: scopedPayload(actor) });
+    json(res, 200, { actor, data: await scopedPayload(actor) });
     return true;
   }
 
@@ -565,7 +686,7 @@ async function handleApi(req, res) {
       forbidden(res, actor);
       return true;
     }
-    const scout = orm.getDataPayload().scouts.find((item) => item.id === scoutId);
+    const scout = (await orm.getDataPayload()).scouts.find((item) => item.id === scoutId);
     if (!scout) {
       json(res, 404, { error: "Scout not found" });
       return true;
@@ -577,14 +698,14 @@ async function handleApi(req, res) {
   if (req.method === "GET" && req.url === "/api/admin/data") {
     const actor = await requireActor(req, res, hasOperationalAccess);
     if (!actor) return true;
-    json(res, 200, { actor, data: orm.getDataPayload() });
+    json(res, 200, { actor, data: await orm.getDataPayload() });
     return true;
   }
 
   if (req.method === "GET" && req.url === "/api/data") {
     const actor = await requireActor(req, res, hasOperationalAccess);
     if (!actor) return true;
-    json(res, 200, orm.getDataPayload());
+    json(res, 200, await orm.getDataPayload());
     return true;
   }
 
@@ -592,7 +713,7 @@ async function handleApi(req, res) {
     const actor = await requireActor(req, res, hasOperationalWriteAccess);
     if (!actor) return true;
     const body = JSON.parse((await readBody(req)) || "{}");
-    orm.saveScouts(Array.isArray(body.scouts) ? body.scouts : []);
+    await orm.saveScouts(Array.isArray(body.scouts) ? body.scouts : []);
     json(res, 200, { ok: true });
     return true;
   }
@@ -601,7 +722,7 @@ async function handleApi(req, res) {
     const actor = await requireActor(req, res, hasOperationalWriteAccess);
     if (!actor) return true;
     const body = JSON.parse((await readBody(req)) || "{}");
-    orm.saveAdults(Array.isArray(body.adults) ? body.adults : []);
+    await orm.saveAdults(Array.isArray(body.adults) ? body.adults : []);
     json(res, 200, { ok: true });
     return true;
   }
@@ -610,7 +731,7 @@ async function handleApi(req, res) {
     const actor = await requireActor(req, res, hasOperationalWriteAccess);
     if (!actor) return true;
     const body = JSON.parse((await readBody(req)) || "{}");
-    orm.saveAdultLeaders(Array.isArray(body.adultLeaders) ? body.adultLeaders : []);
+    await orm.saveAdultLeaders(Array.isArray(body.adultLeaders) ? body.adultLeaders : []);
     json(res, 200, { ok: true });
     return true;
   }
@@ -619,7 +740,7 @@ async function handleApi(req, res) {
     const actor = await requireActor(req, res, hasAdministrator);
     if (!actor) return true;
     const body = JSON.parse((await readBody(req)) || "{}");
-    orm.saveAdultScoutRelationships(Array.isArray(body.adultScoutRelationships) ? body.adultScoutRelationships : []);
+    await orm.saveAdultScoutRelationships(Array.isArray(body.adultScoutRelationships) ? body.adultScoutRelationships : []);
     json(res, 200, { ok: true });
     return true;
   }
@@ -628,7 +749,7 @@ async function handleApi(req, res) {
     const actor = await requireActor(req, res, hasOperationalWriteAccess);
     if (!actor) return true;
     const body = JSON.parse((await readBody(req)) || "{}");
-    orm.savePatrols(Array.isArray(body.patrols) ? body.patrols : []);
+    await orm.savePatrols(Array.isArray(body.patrols) ? body.patrols : []);
     json(res, 200, { ok: true });
     return true;
   }
@@ -637,15 +758,13 @@ async function handleApi(req, res) {
     const actor = await requireActor(req, res, (candidate) => hasAdministrator(candidate) || hasAnyRole(candidate, [roles.ADULT_LEADER]));
     if (!actor) return true;
     const body = JSON.parse((await readBody(req)) || "{}");
-    orm.saveEvents(Array.isArray(body.events) ? body.events : []);
+    await orm.saveEvents(Array.isArray(body.events) ? body.events : []);
     json(res, 200, { ok: true });
     return true;
   }
 
   return false;
 }
-
-orm.ensureDataFiles();
 
 const server = http.createServer(async (req, res) => {
   try {

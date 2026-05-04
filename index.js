@@ -1,5 +1,6 @@
 ﻿const fs = require("fs");
 const path = require("path");
+const db = require("./db");
 
 const root = __dirname;
 const dataDir = path.join(root, "data");
@@ -508,7 +509,7 @@ function buildImportedEvents() {
   });
 }
 
-function ensureDataFiles() {
+function ensureFileDataFiles() {
   fs.mkdirSync(dataDir, { recursive: true });
 
   if (!fs.existsSync(files.scouts)) {
@@ -592,7 +593,18 @@ function ensureDataFiles() {
   }
 }
 
-function getDataPayload() {
+async function ensureDataFiles() {
+  ensureFileDataFiles();
+  if (!db.enabled()) {
+    return;
+  }
+  await db.ensureSchema();
+  if (await db.isEmpty()) {
+    await db.importData(dataDir, getFileDataPayload());
+  }
+}
+
+function getFileDataPayload() {
   return {
     scouts: readCsv(files.scouts),
     adults: readCsv(files.adults),
@@ -603,27 +615,160 @@ function getDataPayload() {
   };
 }
 
+function getDataPayload() {
+  return db.enabled() ? db.getDataPayload() : getFileDataPayload();
+}
+
+function parseEventBoundary(value, endOfDay = false) {
+  const source = String(value || "").trim();
+  if (!source) {
+    return null;
+  }
+
+  const dateOnlyMatch = source.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  const parsed = dateOnlyMatch
+    ? new Date(Number(dateOnlyMatch[1]), Number(dateOnlyMatch[2]) - 1, Number(dateOnlyMatch[3]), endOfDay ? 23 : 0, endOfDay ? 59 : 0, endOfDay ? 59 : 0, endOfDay ? 999 : 0)
+    : new Date(source);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function eventStartTime(event) {
+  return parseEventBoundary(event?.startDate)?.getTime() || 0;
+}
+
+function eventEndTime(event) {
+  const end = parseEventBoundary(event?.endDate || event?.startDate, true);
+  return end?.getTime() || eventStartTime(event);
+}
+
+function eventOccursInRange(event, rangeStart, rangeEnd) {
+  const startTime = eventStartTime(event);
+  const endTime = eventEndTime(event);
+  if (!startTime || !endTime) {
+    return false;
+  }
+
+  if (startTime <= rangeEnd.getTime() && endTime >= rangeStart.getTime()) {
+    return true;
+  }
+
+  if (!event?.repeatEnabled) {
+    return false;
+  }
+
+  const repeatUntil = event.repeatUntil ? parseEventBoundary(event.repeatUntil, true) : null;
+  if (startTime > rangeEnd.getTime()) {
+    return false;
+  }
+  return !repeatUntil || repeatUntil.getTime() >= rangeStart.getTime();
+}
+
+function eventListItem(event) {
+  return {
+    id: event.id,
+    title: event.title,
+    category: event.category,
+    startDate: event.startDate,
+    endDate: event.endDate,
+    dateLabel: event.dateLabel,
+    homeBase: event.homeBase,
+    location: event.location,
+    audience: event.audience,
+    description: event.description,
+    detailNote: event.detailNote,
+    activities: Array.isArray(event.activities) ? event.activities : [],
+    upcoming: event.upcoming,
+    repeatEnabled: event.repeatEnabled,
+    repeatFrequency: event.repeatFrequency,
+    repeatInterval: event.repeatInterval,
+    repeatUntil: event.repeatUntil,
+    repeatMonthlyPattern: event.repeatMonthlyPattern,
+    repeatMonthlyOrdinal: event.repeatMonthlyOrdinal,
+    repeatMonthlyWeekday: event.repeatMonthlyWeekday,
+  };
+}
+
+function getEvents({ startDate, endDate, page = 1, pageSize = 50, includeMedia = false } = {}) {
+  if (db.enabled()) {
+    return db.getEvents({ startDate, endDate, page, pageSize, includeMedia });
+  }
+  const allEvents = readJson(files.events, []);
+  const rangeStart = parseEventBoundary(startDate) || new Date(0);
+  const rangeEnd = parseEventBoundary(endDate, true) || new Date(8640000000000000);
+  const safePage = Math.max(1, Number(page) || 1);
+  const safePageSize = Math.min(100, Math.max(1, Number(pageSize) || 50));
+
+  const filteredEvents = allEvents
+    .filter((event) => eventOccursInRange(event, rangeStart, rangeEnd))
+    .sort((a, b) => eventStartTime(a) - eventStartTime(b));
+  const offset = (safePage - 1) * safePageSize;
+
+  return {
+    events: filteredEvents.slice(offset, offset + safePageSize).map((event) => includeMedia ? event : eventListItem(event)),
+    pagination: {
+      page: safePage,
+      pageSize: safePageSize,
+      total: filteredEvents.length,
+      totalPages: Math.ceil(filteredEvents.length / safePageSize),
+    },
+    range: {
+      startDate: startDate || null,
+      endDate: endDate || null,
+    },
+  };
+}
+
+function getEventById(eventId, { includeMedia = true } = {}) {
+  if (db.enabled()) {
+    return db.getEventById(eventId, { includeMedia });
+  }
+  const event = readJson(files.events, []).find((item) => String(item.id) === String(eventId));
+  if (!event) {
+    return null;
+  }
+  return includeMedia ? event : eventListItem(event);
+}
+
 function saveScouts(scouts) {
+  const normalizedScouts = scouts.map((scout) => ({
+    id: scout.id,
+    name: scoutFullName(scout),
+    firstName: scoutFirstName(scout),
+    lastName: scoutLastName(scout),
+    nickname: scout.nickname || defaultNicknameForName(scoutFullName(scout)),
+    gender: scout.gender,
+    patrol: scout.patrol,
+    patrolBadge: scout.patrolBadge,
+    rank: scout.rank,
+    leadershipRole: scout.leadershipRole,
+    avatar: scout.avatar && scout.avatar !== legacyDefaultScoutAvatarUrl ? scout.avatar : defaultScoutAvatarUrl,
+  }));
+  if (db.enabled()) {
+    return db.replaceScouts(normalizedScouts);
+  }
   writeCsv(
     files.scouts,
     scoutHeaders,
-    scouts.map((scout) => [
+    normalizedScouts.map((scout) => [
       scout.id,
-      scoutFullName(scout),
-      scoutFirstName(scout),
-      scoutLastName(scout),
-      scout.nickname || defaultNicknameForName(scoutFullName(scout)),
+      scout.name,
+      scout.firstName,
+      scout.lastName,
+      scout.nickname,
       scout.gender,
       scout.patrol,
       scout.patrolBadge,
       scout.rank,
       scout.leadershipRole,
-      scout.avatar && scout.avatar !== legacyDefaultScoutAvatarUrl ? scout.avatar : defaultScoutAvatarUrl,
+      scout.avatar,
     ])
   );
 }
 
 function saveAdults(adults) {
+  if (db.enabled()) {
+    return db.replaceAdults(adults);
+  }
   writeCsv(
     files.adults,
     adultHeaders,
@@ -632,6 +777,9 @@ function saveAdults(adults) {
 }
 
 function saveAdultLeaders(adultLeaders) {
+  if (db.enabled()) {
+    return db.replaceAdultLeaders(adultLeaders);
+  }
   writeCsv(
     files.adultLeaders,
     adultLeaderHeaders,
@@ -640,6 +788,9 @@ function saveAdultLeaders(adultLeaders) {
 }
 
 function saveAdultScoutRelationships(adultScoutRelationships) {
+  if (db.enabled()) {
+    return db.replaceAdultScoutRelationships(adultScoutRelationships);
+  }
   writeCsv(
     files.adultScoutRelationships,
     adultScoutRelationshipHeaders,
@@ -653,6 +804,9 @@ function saveAdultScoutRelationships(adultScoutRelationships) {
 }
 
 function savePatrols(patrols) {
+  if (db.enabled()) {
+    return db.replacePatrols(patrols);
+  }
   writeJson(
     files.patrols,
     patrols.map((patrol) => ({
@@ -663,6 +817,9 @@ function savePatrols(patrols) {
 }
 
 function saveEvents(events) {
+  if (db.enabled()) {
+    return db.replaceEvents(dataDir, events);
+  }
   writeJson(files.events, events);
 
   const eventImageReferences = buildEventImageReferences(events, readJson(files.eventImageReferences, {}));
@@ -672,7 +829,10 @@ function saveEvents(events) {
 module.exports = {
   dataDir,
   ensureDataFiles,
+  ensureFileDataFiles,
   getDataPayload,
+  getEventById,
+  getEvents,
   saveScouts,
   saveAdults,
   saveAdultLeaders,
