@@ -11,6 +11,7 @@ const files = {
   adultScoutRelationships: path.join(dataDir, "adult_scout_relationships.csv"),
   patrols: path.join(dataDir, "patrols.json"),
   events: path.join(dataDir, "events.json"),
+  holidays: path.join(dataDir, "holidays.json"),
   eventImageReferences: path.join(dataDir, "event-image-references.json"),
   eventsImport: path.join(dataDir, "events.tsv"),
 };
@@ -231,6 +232,21 @@ function readJson(filePath, fallback = []) {
 
 function writeJson(filePath, value) {
   fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, "utf8");
+}
+
+function normalizeHoliday(record) {
+  const date = String(record?.date || "").trim();
+  const rawEndDate = String(record?.endDate || record?.date || "").trim();
+  const endDate = rawEndDate && date && rawEndDate < date ? date : rawEndDate;
+  return {
+    id: String(record?.id || "").trim(),
+    name: String(record?.name || "Custom holiday").trim(),
+    date,
+    endDate,
+    placedBy: String(record?.placedBy || "").trim(),
+    role: String(record?.role || "").trim(),
+    note: String(record?.note || "").trim(),
+  };
 }
 
 function isImageSource(value) {
@@ -585,6 +601,10 @@ function ensureFileDataFiles() {
     writeJson(files.events, buildImportedEvents());
   }
 
+  if (!fs.existsSync(files.holidays)) {
+    writeJson(files.holidays, []);
+  }
+
   const storedEvents = readJson(files.events, []);
   const storedEventImageReferences = readJson(files.eventImageReferences, {});
   const eventImageReferences = buildEventImageReferences(storedEvents, storedEventImageReferences);
@@ -612,6 +632,7 @@ function getFileDataPayload() {
     adultScoutRelationships: readCsv(files.adultScoutRelationships),
     patrols: readJson(files.patrols, []),
     events: readJson(files.events, []),
+    holidays: readJson(files.holidays, []).map(normalizeHoliday).filter((holiday) => holiday.id && holiday.date),
   };
 }
 
@@ -816,6 +837,20 @@ function savePatrols(patrols) {
   );
 }
 
+function getHolidays() {
+  return db.enabled()
+    ? db.getHolidays()
+    : readJson(files.holidays, []).map(normalizeHoliday).filter((holiday) => holiday.id && holiday.date);
+}
+
+function saveHolidays(holidays) {
+  const normalized = (Array.isArray(holidays) ? holidays : []).map(normalizeHoliday).filter((holiday) => holiday.id && holiday.date);
+  if (db.enabled()) {
+    return db.replaceHolidays(normalized);
+  }
+  writeJson(files.holidays, normalized);
+}
+
 function saveEvents(events) {
   if (db.enabled()) {
     return db.replaceEvents(dataDir, events);
@@ -831,6 +866,7 @@ module.exports = {
   ensureDataFiles,
   ensureFileDataFiles,
   getDataPayload,
+  getHolidays,
   getEventById,
   getEvents,
   saveScouts,
@@ -838,5 +874,6 @@ module.exports = {
   saveAdultLeaders,
   saveAdultScoutRelationships,
   savePatrols,
+  saveHolidays,
   saveEvents,
 };

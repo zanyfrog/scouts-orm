@@ -305,6 +305,23 @@ async function replacePatrols(patrols) {
   });
 }
 
+async function replaceHolidays(holidays) {
+  await withTransaction(async (client) => {
+    await client.query("DELETE FROM holidays");
+    for (const holiday of holidays) {
+      await client.query(
+        "INSERT INTO holidays (id, holiday_date, name, metadata) VALUES ($1,$2,$3,$4)",
+        [
+          holiday.id || "",
+          holiday.date || null,
+          holiday.name || "",
+          jsonb(extraWithout(holiday, ["id", "date", "name"])),
+        ]
+      );
+    }
+  });
+}
+
 async function insertEvent(client, dataDir, event) {
   const eventId = String(event.id || "");
   const image = persistMediaSource(dataDir, eventId, "image", 0, event.image || "");
@@ -378,6 +395,7 @@ async function importData(dataDir, payload) {
   await replaceAdultScoutRelationships(payload.adultScoutRelationships || []);
   await replacePatrols(payload.patrols || []);
   await replaceEvents(dataDir, payload.events || []);
+  await replaceHolidays(payload.holidays || []);
 }
 
 function rowExtra(row) {
@@ -437,13 +455,14 @@ async function getAllEvents(includeMedia = true) {
 }
 
 async function getDataPayload() {
-  const [scouts, adults, adultLeaders, relationships, patrols, events] = await Promise.all([
+  const [scouts, adults, adultLeaders, relationships, patrols, events, holidays] = await Promise.all([
     getPool().query("SELECT * FROM scouts ORDER BY id"),
     getPool().query("SELECT * FROM adults ORDER BY id"),
     getPool().query("SELECT * FROM adult_leaders ORDER BY adult_id, role"),
     getPool().query("SELECT * FROM adult_scout_relationships ORDER BY scout_id, priority, adult_id"),
     getPool().query("SELECT * FROM patrols ORDER BY name"),
     getAllEvents(true),
+    getPool().query("SELECT * FROM holidays ORDER BY holiday_date NULLS LAST, id"),
   ]);
   return {
     scouts: scouts.rows.map((row) => ({ ...rowExtra(row), id: row.id, name: row.name, firstName: row.first_name, lastName: row.last_name, nickname: row.nickname, gender: row.gender, patrol: row.patrol, patrolBadge: row.patrol_badge, rank: row.rank, leadershipRole: row.leadership_role, avatar: row.avatar })),
@@ -452,7 +471,18 @@ async function getDataPayload() {
     adultScoutRelationships: relationships.rows.map((row) => ({ ...rowExtra(row), adultId: row.adult_id, scoutId: row.scout_id, relationship: row.relationship, priority: row.priority })),
     patrols: patrols.rows.map((row) => ({ ...rowExtra(row), name: row.name, badge: row.badge })),
     events,
+    holidays: holidays.rows.map((row) => ({ ...(row.metadata || {}), id: row.id, date: row.holiday_date ? row.holiday_date.toISOString().slice(0, 10) : "", name: row.name })),
   };
+}
+
+async function getHolidays() {
+  const result = await getPool().query("SELECT * FROM holidays ORDER BY holiday_date NULLS LAST, id");
+  return result.rows.map((row) => ({
+    ...(row.metadata || {}),
+    id: row.id,
+    date: row.holiday_date ? row.holiday_date.toISOString().slice(0, 10) : "",
+    name: row.name,
+  }));
 }
 
 async function getEvents({ startDate, endDate, page = 1, pageSize = 50 } = {}) {
@@ -500,6 +530,7 @@ module.exports = {
   isEmpty,
   importData,
   getDataPayload,
+  getHolidays,
   getEvents,
   getEventById,
   replaceScouts,
@@ -507,5 +538,6 @@ module.exports = {
   replaceAdultLeaders,
   replaceAdultScoutRelationships,
   replacePatrols,
+  replaceHolidays,
   replaceEvents,
 };

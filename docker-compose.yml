@@ -16,7 +16,8 @@ services:
       - "${PORT:-4175}:4174"
     environment:
       PORT: 4174
-      AUTH_BASE_URL: "${AUTH_BASE_URL:-http://host.docker.internal:3001}"
+      AUTH_BASE_URL: "${AUTH_BASE_URL:-http://host.docker.internal:3000}"
+      INTERNAL_SERVICE_TOKEN: "${INTERNAL_SERVICE_TOKEN:-scouts-internal-service}"
       DATABASE_URL: "postgres://${POSTGRES_USER:-scouts}:${POSTGRES_PASSWORD:-scouts}@postgres:5432/${POSTGRES_DB:-scouts}"
     volumes:
       - scouts-orm-data:/app/data
