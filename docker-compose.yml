@@ -1,6 +1,8 @@
 services:
   postgres:
     image: postgres:16-alpine
+    profiles:
+      - postgres
     environment:
       POSTGRES_DB: "${POSTGRES_DB:-scouts}"
       POSTGRES_USER: "${POSTGRES_USER:-scouts}"
@@ -18,13 +20,11 @@ services:
       PORT: 4174
       AUTH_BASE_URL: "${AUTH_BASE_URL:-http://host.docker.internal:3000}"
       INTERNAL_SERVICE_TOKEN: "${INTERNAL_SERVICE_TOKEN:-scouts-internal-service}"
-      DATABASE_URL: "postgres://${POSTGRES_USER:-scouts}:${POSTGRES_PASSWORD:-scouts}@postgres:5432/${POSTGRES_DB:-scouts}"
+      DATA_STORE: "${DATA_STORE:-csv}"
+      DATABASE_URL: "${DATABASE_URL:-}"
     volumes:
-      - scouts-orm-data:/app/data
-    depends_on:
-      - postgres
+      - ./data:/app/data
     restart: unless-stopped
 
 volumes:
-  scouts-orm-data:
   scouts-orm-postgres:

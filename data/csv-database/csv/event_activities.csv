@@ -1,0 +1,4 @@
+event_id,position,activity
+camping-13,0,"{""id"": ""activity-1"", ""endDate"": ""2026-04-11T13:00"", ""location"": ""Walkersville Watershed"", ""startDate"": ""2026-04-11T10:00"", ""description"": ""Navigation and orienteering. Scouts create a navigation course for others to navigate""}"
+camping-13,1,"{""id"": ""activity-2"", ""endDate"": ""2026-04-11T22:00"", ""location"": ""Walkersville Watershed"", ""startDate"": ""2026-04-11T20:00"", ""description"": ""After Dinner skits, songs, entertainment provided by the scouts. Followed by a twilight hike to the church's graveyard""}"
+camping-12,0,"{""id"": ""activity-1"", ""endDate"": ""2026-05-09T12:00"", ""location"": ""Sandy Springs Adventure Park"", ""startDate"": ""2026-05-09T09:00"", ""description"": ""The Adventure Park - practice rope bridge climbing""}"

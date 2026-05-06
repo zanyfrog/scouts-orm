@@ -8,7 +8,7 @@ let Pool;
 let pool;
 
 function enabled() {
-  return Boolean(process.env.DATABASE_URL);
+  return process.env.DATA_STORE !== "csv" && Boolean(process.env.DATABASE_URL);
 }
 
 function getPool() {
