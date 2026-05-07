@@ -296,6 +296,25 @@ function booleanToCsv(value) {
   return "";
 }
 
+function eventMediaFilenameFromSource(source) {
+  const match = String(source || "").match(/^\/api\/event-media\/([^/?#]+)/);
+  return match ? decodeURIComponent(match[1]) : "";
+}
+
+function mediaMimeTypeFromSource(source) {
+  const extension = path.extname(eventMediaFilenameFromSource(source) || String(source || "")).toLowerCase();
+  if (extension === ".jpg" || extension === ".jpeg") return "image/jpeg";
+  if (extension === ".png") return "image/png";
+  if (extension === ".webp") return "image/webp";
+  if (extension === ".gif") return "image/gif";
+  if (extension === ".svg") return "image/svg+xml";
+  return "";
+}
+
+function mediaStorageFromSource(source) {
+  return eventMediaFilenameFromSource(source) ? "file" : (externalMediaSource(source) || !dataUriParts(source) ? "external" : "");
+}
+
 function jsonCsv(value, fallback = {}) {
   return JSON.stringify(value ?? fallback);
 }
@@ -523,6 +542,7 @@ function saveCsvDatabaseEvents(events) {
     ]);
 
     if (event.image) {
+      const filename = eventMediaFilenameFromSource(event.image);
       mediaRows.push([
         `${eventId}:image:0`,
         eventId,
@@ -530,9 +550,9 @@ function saveCsvDatabaseEvents(events) {
         0,
         "image",
         event.image,
-        "",
-        "",
-        jsonCsv({ storage: externalMediaSource(event.image) || !dataUriParts(event.image) ? "external" : "" }),
+        filename,
+        mediaMimeTypeFromSource(event.image),
+        jsonCsv({ storage: mediaStorageFromSource(event.image) }),
       ]);
     }
 
@@ -541,6 +561,7 @@ function saveCsvDatabaseEvents(events) {
     });
 
     (Array.isArray(event.gallery) ? event.gallery : []).forEach((item, index) => {
+      const filename = eventMediaFilenameFromSource(item?.src);
       mediaRows.push([
         `${eventId}:gallery:${index}`,
         eventId,
@@ -548,9 +569,9 @@ function saveCsvDatabaseEvents(events) {
         index,
         item?.mediaType || "",
         item?.src || "",
-        "",
-        "",
-        jsonCsv(withoutFields({ ...(item || {}), storage: externalMediaSource(item?.src) || !dataUriParts(item?.src) ? "external" : "" }, ["src"])),
+        filename,
+        mediaMimeTypeFromSource(item?.src),
+        jsonCsv(withoutFields({ ...(item || {}), storage: mediaStorageFromSource(item?.src) }, ["src"])),
       ]);
     });
   });
