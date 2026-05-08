@@ -164,6 +164,70 @@ test("ORM scopes parent data to linked scouts and lets leaders read/write operat
     assert.equal(leaderScoutsResult.response.status, 200);
     assert.ok(leaderScoutsResult.payload.scouts.length > 1);
 
+    const parentAdultsDenied = await request(baseUrl, "/api/adults", {
+      headers: { Authorization: "Bearer parent" },
+    });
+    assert.equal(parentAdultsDenied.response.status, 403);
+
+    const leaderAdultsResult = await request(baseUrl, "/api/adults", {
+      headers: { Authorization: "Bearer leader" },
+    });
+    assert.equal(leaderAdultsResult.response.status, 200);
+    assert.ok(leaderAdultsResult.payload.adults.length > 1);
+
+    const filteredAdultsResult = await request(baseUrl, "/api/adults?ids=adult-1,missing-adult", {
+      headers: { Authorization: "Bearer leader" },
+    });
+    assert.equal(filteredAdultsResult.response.status, 200);
+    assert.deepEqual(filteredAdultsResult.payload.adults.map((adult) => adult.id), ["adult-1"]);
+
+    const adultDetailResult = await request(baseUrl, "/api/adults/adult-1", {
+      headers: { Authorization: "Bearer leader" },
+    });
+    assert.equal(adultDetailResult.response.status, 200);
+    assert.equal(adultDetailResult.payload.adult.id, "adult-1");
+
+    const testAdult = {
+      id: "adult-test-crud",
+      name: "Test Adult CRUD",
+      relationship: "Adult leader",
+      email: "adult-test-crud@example.com",
+      homePhone: "",
+      cellPhone: "555-0100",
+    };
+    const createAdultResult = await request(baseUrl, "/api/adults", {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer leader",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ adult: testAdult }),
+    });
+    assert.equal(createAdultResult.response.status, 200);
+    assert.equal(createAdultResult.payload.adult.id, testAdult.id);
+
+    const updateAdultResult = await request(baseUrl, `/api/adults/${testAdult.id}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: "Bearer leader",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ adult: { ...testAdult, cellPhone: "555-0101" } }),
+    });
+    assert.equal(updateAdultResult.response.status, 200);
+    assert.equal(updateAdultResult.payload.adult.cellPhone, "555-0101");
+
+    const deleteAdultResult = await request(baseUrl, `/api/adults/${testAdult.id}`, {
+      method: "DELETE",
+      headers: { Authorization: "Bearer leader" },
+    });
+    assert.equal(deleteAdultResult.response.status, 200);
+
+    const deletedAdultResult = await request(baseUrl, `/api/adults/${testAdult.id}`, {
+      headers: { Authorization: "Bearer leader" },
+    });
+    assert.equal(deletedAdultResult.response.status, 404);
+
     const originalScout = parentScoutDetail.payload.scout;
     const parentWriteResult = await request(baseUrl, "/api/scouts", {
       method: "POST",
