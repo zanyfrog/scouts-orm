@@ -157,13 +157,23 @@ function hasOperationalWriteAccess(actor) {
   return hasAdministrator(actor) || hasAnyRole(actor, [roles.ADULT_LEADER]);
 }
 
+function hasScoutRole(actor) {
+  return hasAnyRole(actor, [roles.SCOUT]);
+}
+
+function hasParentRole(actor) {
+  return hasAnyRole(actor, [roles.PARENT]);
+}
+
+function hasAdultLeaderScoutAccess(actor) {
+  return hasAnyRole(actor, [roles.ADULT_LEADER]);
+}
+
 function hasMemberAccess(actor) {
   return Boolean(actor?.authenticated) && hasAnyRole(actor, [
     roles.SCOUT,
     roles.PARENT,
     roles.ADULT_LEADER,
-    roles.COMMITTEE_MEMBER,
-    roles.ADMINISTRATOR,
   ]);
 }
 
@@ -189,11 +199,11 @@ function linkedScoutIds(actor) {
 }
 
 function scoutIdsForActor(actor) {
-  if (hasOperationalAccess(actor)) {
+  if (hasAdultLeaderScoutAccess(actor)) {
     return null;
   }
-  const allowed = linkedScoutIds(actor);
-  if ((actor?.globalRoles || []).includes(roles.SCOUT) && actorPersonId(actor)) {
+  const allowed = hasParentRole(actor) ? linkedScoutIds(actor) : new Set();
+  if (hasScoutRole(actor) && actorPersonId(actor)) {
     allowed.add(actorPersonId(actor));
   }
   return allowed;
@@ -208,13 +218,44 @@ async function loadHolidays() {
 }
 
 function canAccessScout(actor, scoutId) {
-  if (hasOperationalAccess(actor)) {
+  if (hasAdultLeaderScoutAccess(actor)) {
     return true;
   }
-  if ((actor?.globalRoles || []).includes(roles.SCOUT) && actorPersonId(actor) === scoutId) {
+  if (hasScoutRole(actor) && actorPersonId(actor) === scoutId) {
     return true;
   }
-  return linkedScoutIds(actor).has(scoutId);
+  return hasParentRole(actor) && linkedScoutIds(actor).has(scoutId);
+}
+
+function parseScoutIdsParam(value) {
+  return String(value || "")
+    .split(",")
+    .map((id) => id.trim())
+    .filter(Boolean);
+}
+
+function applyScoutPatch(existingScout, patch, actor) {
+  const allowedFields = hasAdultLeaderScoutAccess(actor)
+    ? ["id", "name", "firstName", "lastName", "nickname", "gender", "patrol", "patrolBadge", "rank", "leadershipRole", "avatar"]
+    : ["firstName", "lastName", "nickname", "gender", "avatar"];
+  const nextScout = { ...(existingScout || {}) };
+  for (const field of allowedFields) {
+    if (Object.prototype.hasOwnProperty.call(patch, field)) {
+      nextScout[field] = patch[field];
+    }
+  }
+  nextScout.id = existingScout?.id || patch.id;
+  return nextScout;
+}
+
+async function scoutsForActor(actor, ids = null) {
+  const allowedScoutIds = scoutIdsForActor(actor);
+  if (allowedScoutIds === null) {
+    return orm.getScoutsByIds(ids);
+  }
+  const requestedIds = Array.isArray(ids) ? ids : [...allowedScoutIds];
+  const readableIds = requestedIds.filter((id) => allowedScoutIds.has(id));
+  return orm.getScoutsByIds(readableIds);
 }
 
 async function scopedPayload(actor) {
@@ -681,6 +722,14 @@ async function handleApi(req, res) {
     return true;
   }
 
+  if (req.method === "GET" && url.pathname === "/api/scouts") {
+    const actor = await requireActor(req, res, hasMemberAccess);
+    if (!actor) return true;
+    const ids = url.searchParams.has("ids") ? parseScoutIdsParam(url.searchParams.get("ids")) : null;
+    json(res, 200, { scouts: await scoutsForActor(actor, ids) });
+    return true;
+  }
+
   if (req.method === "GET" && url.pathname.startsWith("/api/scouts/")) {
     const actor = await authenticate(req);
     if (!actor) {
@@ -692,7 +741,7 @@ async function handleApi(req, res) {
       forbidden(res, actor);
       return true;
     }
-    const scout = (await loadDataPayload()).scouts.find((item) => item.id === scoutId);
+    const scout = (await orm.getScoutsByIds([scoutId]))[0];
     if (!scout) {
       json(res, 404, { error: "Scout not found" });
       return true;
@@ -702,14 +751,14 @@ async function handleApi(req, res) {
   }
 
   if (req.method === "GET" && url.pathname === "/api/admin/data") {
-    const actor = await requireActor(req, res, hasOperationalAccess);
+    const actor = await requireActor(req, res, hasAdultLeaderScoutAccess);
     if (!actor) return true;
     json(res, 200, { actor, data: await loadDataPayload() });
     return true;
   }
 
   if (req.method === "GET" && url.pathname === "/api/data") {
-    const actor = await requireActor(req, res, hasOperationalAccess);
+    const actor = await requireActor(req, res, hasAdultLeaderScoutAccess);
     if (!actor) return true;
     json(res, 200, await loadDataPayload());
     return true;
@@ -726,12 +775,27 @@ async function handleApi(req, res) {
   }
 
   if (req.method === "POST" && url.pathname === "/api/scouts") {
-    const actor = await requireActor(req, res, hasOperationalWriteAccess);
+    const actor = await requireActor(req, res, hasMemberAccess);
     if (!actor) return true;
     const body = JSON.parse((await readBody(req)) || "{}");
-    await orm.saveScouts(Array.isArray(body.scouts) ? body.scouts : []);
+    const scoutPatch = body.scout && typeof body.scout === "object" && !Array.isArray(body.scout) ? body.scout : null;
+    const scoutId = String(scoutPatch?.id || "").trim();
+    if (!scoutPatch || !scoutId) {
+      json(res, 400, { error: "A scout object with an id is required" });
+      return true;
+    }
+    if (!canAccessScout(actor, scoutId)) {
+      forbidden(res, actor);
+      return true;
+    }
+    const existingScout = (await orm.getScoutsByIds([scoutId]))[0];
+    if (!existingScout && !hasAdultLeaderScoutAccess(actor)) {
+      json(res, 404, { error: "Scout not found" });
+      return true;
+    }
+    const scout = await orm.saveScout(applyScoutPatch(existingScout || { id: scoutId }, scoutPatch, actor));
     invalidateReadCaches();
-    json(res, 200, { ok: true });
+    json(res, 200, { scout });
     return true;
   }
 

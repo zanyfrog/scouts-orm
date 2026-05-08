@@ -256,6 +256,43 @@ async function replaceScouts(scouts) {
   });
 }
 
+function scoutFromRow(row) {
+  return { ...rowExtra(row), id: row.id, name: row.name, firstName: row.first_name, lastName: row.last_name, nickname: row.nickname, gender: row.gender, patrol: row.patrol, patrolBadge: row.patrol_badge, rank: row.rank, leadershipRole: row.leadership_role, avatar: row.avatar };
+}
+
+async function getScoutsByIds(ids) {
+  const safeIds = Array.isArray(ids) ? ids.map((id) => String(id || "").trim()).filter(Boolean) : null;
+  if (safeIds && !safeIds.length) {
+    return [];
+  }
+  const result = safeIds
+    ? await getPool().query("SELECT * FROM scouts WHERE id = ANY($1) ORDER BY id", [safeIds])
+    : await getPool().query("SELECT * FROM scouts ORDER BY id");
+  return result.rows.map(scoutFromRow);
+}
+
+async function saveScout(scout) {
+  const saved = await getPool().query(
+    `INSERT INTO scouts (id, name, first_name, last_name, nickname, gender, patrol, patrol_badge, rank, leadership_role, avatar, extra)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
+     ON CONFLICT (id) DO UPDATE SET
+       name = EXCLUDED.name,
+       first_name = EXCLUDED.first_name,
+       last_name = EXCLUDED.last_name,
+       nickname = EXCLUDED.nickname,
+       gender = EXCLUDED.gender,
+       patrol = EXCLUDED.patrol,
+       patrol_badge = EXCLUDED.patrol_badge,
+       rank = EXCLUDED.rank,
+       leadership_role = EXCLUDED.leadership_role,
+       avatar = EXCLUDED.avatar,
+       extra = EXCLUDED.extra
+     RETURNING *`,
+    [scout.id, scout.name || "", scout.firstName || "", scout.lastName || "", scout.nickname || "", scout.gender || "", scout.patrol || "", scout.patrolBadge || "", scout.rank || "", scout.leadershipRole || "", scout.avatar || "", jsonb(extraWithout(scout, ["id", "name", "firstName", "lastName", "nickname", "gender", "patrol", "patrolBadge", "rank", "leadershipRole", "avatar"]))]
+  );
+  return scoutFromRow(saved.rows[0]);
+}
+
 async function replaceAdults(adults) {
   await withTransaction(async (client) => {
     await client.query("DELETE FROM adults");
@@ -465,7 +502,7 @@ async function getDataPayload() {
     getPool().query("SELECT * FROM holidays ORDER BY holiday_date NULLS LAST, id"),
   ]);
   return {
-    scouts: scouts.rows.map((row) => ({ ...rowExtra(row), id: row.id, name: row.name, firstName: row.first_name, lastName: row.last_name, nickname: row.nickname, gender: row.gender, patrol: row.patrol, patrolBadge: row.patrol_badge, rank: row.rank, leadershipRole: row.leadership_role, avatar: row.avatar })),
+    scouts: scouts.rows.map(scoutFromRow),
     adults: adults.rows.map((row) => ({ ...rowExtra(row), id: row.id, name: row.name, relationship: row.relationship, email: row.email, homePhone: row.home_phone, cellPhone: row.cell_phone })),
     adultLeaders: adultLeaders.rows.map((row) => ({ ...rowExtra(row), adultId: row.adult_id, role: row.role })),
     adultScoutRelationships: relationships.rows.map((row) => ({ ...rowExtra(row), adultId: row.adult_id, scoutId: row.scout_id, relationship: row.relationship, priority: row.priority })),
@@ -530,10 +567,12 @@ module.exports = {
   isEmpty,
   importData,
   getDataPayload,
+  getScoutsByIds,
   getHolidays,
   getEvents,
   getEventById,
   replaceScouts,
+  saveScout,
   replaceAdults,
   replaceAdultLeaders,
   replaceAdultScoutRelationships,

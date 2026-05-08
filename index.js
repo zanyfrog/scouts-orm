@@ -325,6 +325,43 @@ function withoutFields(record, fields) {
   return extra;
 }
 
+const scoutFieldNames = ["id", "name", "firstName", "lastName", "nickname", "gender", "patrol", "patrolBadge", "rank", "leadershipRole", "avatar"];
+
+function scoutFromCsvDatabaseRow(row) {
+  return {
+    ...rowExtra(row),
+    id: row.id,
+    name: row.name,
+    firstName: row.first_name,
+    lastName: row.last_name,
+    nickname: row.nickname,
+    gender: row.gender,
+    patrol: row.patrol,
+    patrolBadge: row.patrol_badge,
+    rank: row.rank,
+    leadershipRole: row.leadership_role,
+    avatar: row.avatar,
+  };
+}
+
+function normalizeScout(scout) {
+  const source = scout || {};
+  return {
+    ...withoutFields(source, scoutFieldNames),
+    id: source.id,
+    name: scoutFullName(source),
+    firstName: scoutFirstName(source),
+    lastName: scoutLastName(source),
+    nickname: source.nickname || defaultNicknameForName(scoutFullName(source)),
+    gender: source.gender,
+    patrol: source.patrol,
+    patrolBadge: source.patrolBadge,
+    rank: source.rank,
+    leadershipRole: source.leadershipRole,
+    avatar: source.avatar && source.avatar !== legacyDefaultScoutAvatarUrl ? source.avatar : defaultScoutAvatarUrl,
+  };
+}
+
 function compactRecord(record) {
   return Object.fromEntries(Object.entries(record).filter(([, value]) => value !== null && value !== undefined));
 }
@@ -395,20 +432,7 @@ function getCsvDatabasePayload() {
   });
 
   return {
-    scouts: readCsv(csvDatabaseFiles.scouts).map((row) => ({
-      ...rowExtra(row),
-      id: row.id,
-      name: row.name,
-      firstName: row.first_name,
-      lastName: row.last_name,
-      nickname: row.nickname,
-      gender: row.gender,
-      patrol: row.patrol,
-      patrolBadge: row.patrol_badge,
-      rank: row.rank,
-      leadershipRole: row.leadership_role,
-      avatar: row.avatar,
-    })),
+    scouts: readCsv(csvDatabaseFiles.scouts).map(scoutFromCsvDatabaseRow),
     adults: readCsv(csvDatabaseFiles.adults).map((row) => ({
       ...rowExtra(row),
       id: row.id,
@@ -999,6 +1023,42 @@ function getDataPayload() {
   return db.enabled() ? db.getDataPayload() : getFileDataPayload();
 }
 
+function getScoutsByIds(ids) {
+  const safeIds = Array.isArray(ids) ? ids.map((id) => String(id || "").trim()).filter(Boolean) : null;
+  if (safeIds && !safeIds.length) {
+    return db.enabled() ? Promise.resolve([]) : [];
+  }
+  if (db.enabled()) {
+    return db.getScoutsByIds(safeIds);
+  }
+  const scouts = csvDatabaseEnabled() ? readCsv(csvDatabaseFiles.scouts).map(scoutFromCsvDatabaseRow) : readCsv(files.scouts);
+  if (!safeIds) {
+    return scouts;
+  }
+  const idSet = new Set(safeIds);
+  return scouts.filter((scout) => idSet.has(String(scout.id)));
+}
+
+function writeFileScouts(scouts) {
+  writeCsv(
+    files.scouts,
+    scoutHeaders,
+    scouts.map((scout) => [
+      scout.id,
+      scout.name,
+      scout.firstName,
+      scout.lastName,
+      scout.nickname,
+      scout.gender,
+      scout.patrol,
+      scout.patrolBadge,
+      scout.rank,
+      scout.leadershipRole,
+      scout.avatar,
+    ])
+  );
+}
+
 function parseEventBoundary(value, endOfDay = false) {
   const source = String(value || "").trim();
   if (!source) {
@@ -1110,42 +1170,42 @@ function getEventById(eventId, { includeMedia = true } = {}) {
 }
 
 function saveScouts(scouts) {
-  const normalizedScouts = scouts.map((scout) => ({
-    id: scout.id,
-    name: scoutFullName(scout),
-    firstName: scoutFirstName(scout),
-    lastName: scoutLastName(scout),
-    nickname: scout.nickname || defaultNicknameForName(scoutFullName(scout)),
-    gender: scout.gender,
-    patrol: scout.patrol,
-    patrolBadge: scout.patrolBadge,
-    rank: scout.rank,
-    leadershipRole: scout.leadershipRole,
-    avatar: scout.avatar && scout.avatar !== legacyDefaultScoutAvatarUrl ? scout.avatar : defaultScoutAvatarUrl,
-  }));
+  const normalizedScouts = scouts.map(normalizeScout);
   if (db.enabled()) {
     return db.replaceScouts(normalizedScouts);
   }
   if (csvDatabaseEnabled()) {
     return saveCsvDatabaseScouts(normalizedScouts);
   }
-  writeCsv(
-    files.scouts,
-    scoutHeaders,
-    normalizedScouts.map((scout) => [
-      scout.id,
-      scout.name,
-      scout.firstName,
-      scout.lastName,
-      scout.nickname,
-      scout.gender,
-      scout.patrol,
-      scout.patrolBadge,
-      scout.rank,
-      scout.leadershipRole,
-      scout.avatar,
-    ])
-  );
+  writeFileScouts(normalizedScouts);
+}
+
+async function saveScout(scout) {
+  const normalizedScout = normalizeScout(scout);
+  if (db.enabled()) {
+    return db.saveScout(normalizedScout);
+  }
+  if (csvDatabaseEnabled()) {
+    const scouts = readCsv(csvDatabaseFiles.scouts).map(scoutFromCsvDatabaseRow);
+    const index = scouts.findIndex((item) => String(item.id) === String(normalizedScout.id));
+    if (index === -1) {
+      scouts.push(normalizedScout);
+    } else {
+      scouts[index] = normalizedScout;
+    }
+    saveCsvDatabaseScouts(scouts);
+    return normalizedScout;
+  }
+
+  const scouts = readCsv(files.scouts);
+  const index = scouts.findIndex((item) => String(item.id) === String(normalizedScout.id));
+  if (index === -1) {
+    scouts.push(normalizedScout);
+  } else {
+    scouts[index] = normalizedScout;
+  }
+  writeFileScouts(scouts);
+  return normalizedScout;
 }
 
 function saveAdults(adults) {
@@ -1250,10 +1310,12 @@ module.exports = {
   ensureDataFiles,
   ensureFileDataFiles,
   getDataPayload,
+  getScoutsByIds,
   getHolidays,
   getEventById,
   getEvents,
   saveScouts,
+  saveScout,
   saveAdults,
   saveAdultLeaders,
   saveAdultScoutRelationships,

@@ -30,11 +30,25 @@ function createAuthServer() {
         unitRoles: [{ role: "adult_leader", unitId: "unit-1" }],
         relationships: [],
       },
+      scout: {
+        authenticated: true,
+        person: { id: "scout-1", externalId: "scout-1", name: "Scout", type: "scout", status: "active" },
+        globalRoles: ["public", "scout"],
+        unitRoles: [],
+        relationships: [],
+      },
       admin: {
         authenticated: true,
         person: { id: "adult-admin", externalId: "adult-admin", name: "Admin", type: "adult", status: "active" },
         globalRoles: ["public", "administrator"],
         unitRoles: [],
+        relationships: [],
+      },
+      committee: {
+        authenticated: true,
+        person: { id: "adult-committee", externalId: "adult-committee", name: "Committee", type: "adult", status: "active" },
+        globalRoles: ["public"],
+        unitRoles: [{ role: "committee_member", unitId: "unit-1" }],
         relationships: [],
       },
     };
@@ -84,6 +98,9 @@ test("ORM protects broad data while keeping public payload available", async () 
 
     const broadResult = await request(baseUrl, "/api/data");
     assert.equal(broadResult.response.status, 401);
+
+    const publicScoutsResult = await request(baseUrl, "/api/scouts");
+    assert.equal(publicScoutsResult.response.status, 401);
   } finally {
     await close(server);
     await close(authServer);
@@ -106,13 +123,109 @@ test("ORM scopes parent data to linked scouts and lets leaders read/write operat
     assert.equal(parentResult.response.status, 200);
     assert.deepEqual(parentResult.payload.data.scouts.map((scout) => scout.id), ["scout-1"]);
 
+    const parentScoutsResult = await request(baseUrl, "/api/scouts", {
+      headers: { Authorization: "Bearer parent" },
+    });
+    assert.equal(parentScoutsResult.response.status, 200);
+    assert.deepEqual(parentScoutsResult.payload.scouts.map((scout) => scout.id), ["scout-1"]);
+
+    const parentFilteredResult = await request(baseUrl, "/api/scouts?ids=scout-1,scout-2", {
+      headers: { Authorization: "Bearer parent" },
+    });
+    assert.equal(parentFilteredResult.response.status, 200);
+    assert.deepEqual(parentFilteredResult.payload.scouts.map((scout) => scout.id), ["scout-1"]);
+
+    const scoutResult = await request(baseUrl, "/api/scouts", {
+      headers: { Authorization: "Bearer scout" },
+    });
+    assert.equal(scoutResult.response.status, 200);
+    assert.deepEqual(scoutResult.payload.scouts.map((scout) => scout.id), ["scout-1"]);
+
+    const parentScoutDetail = await request(baseUrl, "/api/scouts/scout-1", {
+      headers: { Authorization: "Bearer parent" },
+    });
+    assert.equal(parentScoutDetail.response.status, 200);
+    assert.equal(parentScoutDetail.payload.scout.id, "scout-1");
+
+    const parentDeniedDetail = await request(baseUrl, "/api/scouts/scout-2", {
+      headers: { Authorization: "Bearer parent" },
+    });
+    assert.equal(parentDeniedDetail.response.status, 403);
+
     const leaderResult = await request(baseUrl, "/api/data", {
       headers: { Authorization: "Bearer leader" },
     });
     assert.equal(leaderResult.response.status, 200);
     assert.ok(leaderResult.payload.scouts.length > 1);
 
-    const writeResult = await request(baseUrl, "/api/scouts", {
+    const leaderScoutsResult = await request(baseUrl, "/api/scouts", {
+      headers: { Authorization: "Bearer leader" },
+    });
+    assert.equal(leaderScoutsResult.response.status, 200);
+    assert.ok(leaderScoutsResult.payload.scouts.length > 1);
+
+    const originalScout = parentScoutDetail.payload.scout;
+    const parentWriteResult = await request(baseUrl, "/api/scouts", {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer parent",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ scout: { id: originalScout.id, nickname: originalScout.nickname, rank: "Forbidden Rank" } }),
+    });
+    assert.equal(parentWriteResult.response.status, 200);
+    assert.equal(parentWriteResult.payload.scout.nickname, originalScout.nickname);
+    assert.equal(parentWriteResult.payload.scout.rank, originalScout.rank);
+
+    const scoutWriteResult = await request(baseUrl, "/api/scouts", {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer scout",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ scout: { id: originalScout.id, avatar: originalScout.avatar, patrol: "Forbidden Patrol" } }),
+    });
+    assert.equal(scoutWriteResult.response.status, 200);
+    assert.equal(scoutWriteResult.payload.scout.avatar, originalScout.avatar);
+    assert.equal(scoutWriteResult.payload.scout.patrol, originalScout.patrol);
+
+    const leaderWriteResult = await request(baseUrl, "/api/scouts", {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer leader",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ scout: { ...originalScout, rank: originalScout.rank } }),
+    });
+    assert.equal(leaderWriteResult.response.status, 200);
+    assert.equal(leaderWriteResult.payload.scout.id, originalScout.id);
+
+    const adminDataResult = await request(baseUrl, "/api/data", {
+      headers: { Authorization: "Bearer admin" },
+    });
+    assert.equal(adminDataResult.response.status, 403);
+
+    const adminScoutDetailResult = await request(baseUrl, "/api/scouts/scout-1", {
+      headers: { Authorization: "Bearer admin" },
+    });
+    assert.equal(adminScoutDetailResult.response.status, 403);
+
+    const adminScoutWriteResult = await request(baseUrl, "/api/scouts", {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer admin",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ scout: { id: originalScout.id, nickname: originalScout.nickname } }),
+    });
+    assert.equal(adminScoutWriteResult.response.status, 403);
+
+    const committeeScoutsResult = await request(baseUrl, "/api/scouts", {
+      headers: { Authorization: "Bearer committee" },
+    });
+    assert.equal(committeeScoutsResult.response.status, 403);
+
+    const bulkScoutWriteResult = await request(baseUrl, "/api/scouts", {
       method: "POST",
       headers: {
         Authorization: "Bearer leader",
@@ -120,7 +233,7 @@ test("ORM scopes parent data to linked scouts and lets leaders read/write operat
       },
       body: JSON.stringify({ scouts: leaderResult.payload.scouts }),
     });
-    assert.equal(writeResult.response.status, 200);
+    assert.equal(bulkScoutWriteResult.response.status, 400);
 
     const deniedRelationshipWrite = await request(baseUrl, "/api/adult-scout-relationships", {
       method: "POST",
