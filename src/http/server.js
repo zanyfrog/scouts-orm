@@ -414,6 +414,7 @@ function publicEventSummary(event, includeInlineImages = false) {
     description: event.description,
     detailNote: event.detailNote,
     activities: Array.isArray(event.activities) ? event.activities : [],
+    registrationRequired: Boolean(event.registrationRequired),
     image,
     gallery,
     upcoming: event.upcoming,

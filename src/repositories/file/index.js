@@ -40,7 +40,7 @@ const csvDatabaseHeaders = {
   adultLeaders: ["adult_id", "role", "extra"],
   adultScoutRelationships: ["adult_id", "scout_id", "relationship", "priority", "extra"],
   patrols: ["name", "badge", "extra"],
-  events: ["id", "title", "category", "start_date", "end_date", "start_at", "end_at", "date_label", "home_base", "location", "audience", "description", "detail_note", "image_src", "image_filename", "image_mime_type", "upcoming", "repeat_enabled", "repeat_frequency", "repeat_interval", "repeat_until", "repeat_monthly_pattern", "repeat_monthly_ordinal", "repeat_monthly_weekday", "extra"],
+  events: ["id", "title", "category", "start_date", "end_date", "start_at", "end_at", "date_label", "home_base", "location", "audience", "description", "detail_note", "image_src", "image_filename", "image_mime_type", "registration_required", "upcoming", "repeat_enabled", "repeat_frequency", "repeat_interval", "repeat_until", "repeat_monthly_pattern", "repeat_monthly_ordinal", "repeat_monthly_weekday", "extra"],
   eventActivities: ["event_id", "position", "activity"],
   eventMedia: ["id", "event_id", "role", "position", "media_type", "src", "filename", "mime_type", "metadata"],
   holidays: ["id", "holiday_date", "name", "metadata"],
@@ -296,6 +296,27 @@ function booleanToCsv(value) {
   return "";
 }
 
+function booleanFromEventField(value) {
+  if (value === true || value === false) return value;
+  const normalized = String(value ?? "").trim().toLowerCase();
+  if (["t", "true", "1", "yes", "y", "required"].includes(normalized)) return true;
+  if (["f", "false", "0", "no", "n", "optional"].includes(normalized)) return false;
+  return false;
+}
+
+function eventRegistrationRequired(event) {
+  return booleanFromEventField(
+    event?.registrationRequired ?? event?.registerRequired ?? event?.requiresRegistration ?? event?.register
+  );
+}
+
+function normalizeEvent(event) {
+  return {
+    ...(event || {}),
+    registrationRequired: eventRegistrationRequired(event),
+  };
+}
+
 function eventMediaFilenameFromSource(source) {
   const match = String(source || "").match(/^\/api\/event-media\/([^/?#]+)/);
   return match ? decodeURIComponent(match[1]) : "";
@@ -407,6 +428,9 @@ function csvEventFromRow(row, activities = [], media = [], includeMedia = true) 
     description: row.description,
     detailNote: row.detail_note,
     activities,
+    registrationRequired: row.registration_required === undefined
+      ? eventRegistrationRequired(rowExtra(row))
+      : booleanFromCsv(row.registration_required) ?? false,
     upcoming: booleanFromCsv(row.upcoming),
     repeatEnabled: booleanFromCsv(row.repeat_enabled),
     repeatFrequency: row.repeat_frequency || null,
@@ -572,6 +596,7 @@ function saveCsvDatabaseEvents(events) {
       event.image || "",
       "",
       "",
+      booleanToCsv(eventRegistrationRequired(event)),
       booleanToCsv(event.upcoming),
       booleanToCsv(event.repeatEnabled),
       event.repeatFrequency ?? "",
@@ -580,7 +605,7 @@ function saveCsvDatabaseEvents(events) {
       event.repeatMonthlyPattern ?? "",
       event.repeatMonthlyOrdinal ?? "",
       event.repeatMonthlyWeekday ?? "",
-      jsonCsv(withoutFields(event, ["id", "title", "category", "startDate", "endDate", "dateLabel", "homeBase", "location", "audience", "description", "detailNote", "image", "gallery", "activities", "upcoming", "repeatEnabled", "repeatFrequency", "repeatInterval", "repeatUntil", "repeatMonthlyPattern", "repeatMonthlyOrdinal", "repeatMonthlyWeekday"])),
+      jsonCsv(withoutFields(event, ["id", "title", "category", "startDate", "endDate", "dateLabel", "homeBase", "location", "audience", "description", "detailNote", "image", "gallery", "activities", "registrationRequired", "registerRequired", "requiresRegistration", "register", "upcoming", "repeatEnabled", "repeatFrequency", "repeatInterval", "repeatUntil", "repeatMonthlyPattern", "repeatMonthlyOrdinal", "repeatMonthlyWeekday"])),
     ]);
 
     if (event.image) {
@@ -1032,7 +1057,7 @@ function getFileDataPayload() {
     adultLeaders: readCsv(files.adultLeaders),
     adultScoutRelationships: readCsv(files.adultScoutRelationships),
     patrols: readJson(files.patrols, []),
-    events: readJson(files.events, []),
+    events: readJson(files.events, []).map(normalizeEvent),
     holidays: readJson(files.holidays, []).map(normalizeHoliday).filter((holiday) => holiday.id && holiday.date),
   };
 }
@@ -1151,6 +1176,7 @@ function eventListItem(event) {
     description: event.description,
     detailNote: event.detailNote,
     activities: Array.isArray(event.activities) ? event.activities : [],
+    registrationRequired: eventRegistrationRequired(event),
     upcoming: event.upcoming,
     repeatEnabled: event.repeatEnabled,
     repeatFrequency: event.repeatFrequency,
@@ -1166,7 +1192,7 @@ function getEvents({ startDate, endDate, page = 1, pageSize = 50, includeMedia =
   if (db.enabled()) {
     return db.getEvents({ startDate, endDate, page, pageSize, includeMedia });
   }
-  const allEvents = csvDatabaseEnabled() ? getCsvDatabasePayload().events : readJson(files.events, []);
+  const allEvents = csvDatabaseEnabled() ? getCsvDatabasePayload().events : readJson(files.events, []).map(normalizeEvent);
   const rangeStart = parseEventBoundary(startDate) || new Date(0);
   const rangeEnd = parseEventBoundary(endDate, true) || new Date(8640000000000000);
   const safePage = Math.max(1, Number(page) || 1);
@@ -1200,7 +1226,7 @@ function getEventById(eventId, { includeMedia = true } = {}) {
   if (!event) {
     return null;
   }
-  return includeMedia ? event : eventListItem(event);
+  return includeMedia ? normalizeEvent(event) : eventListItem(event);
 }
 
 function saveScouts(scouts) {
@@ -1391,15 +1417,16 @@ function saveHolidays(holidays) {
 }
 
 function saveEvents(events) {
+  const normalizedEvents = (Array.isArray(events) ? events : []).map(normalizeEvent);
   if (db.enabled()) {
-    return db.replaceEvents(dataDir, events);
+    return db.replaceEvents(dataDir, normalizedEvents);
   }
   if (csvDatabaseEnabled()) {
-    return saveCsvDatabaseEvents(events);
+    return saveCsvDatabaseEvents(normalizedEvents);
   }
-  writeJson(files.events, events);
+  writeJson(files.events, normalizedEvents);
 
-  const eventImageReferences = buildEventImageReferences(events, readJson(files.eventImageReferences, {}));
+  const eventImageReferences = buildEventImageReferences(normalizedEvents, readJson(files.eventImageReferences, {}));
   writeJson(files.eventImageReferences, eventImageReferences.imageReferences);
 }
 

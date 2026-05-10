@@ -62,6 +62,7 @@ CREATE TABLE IF NOT EXISTS events (
   image_src text NOT NULL DEFAULT '',
   image_filename text NOT NULL DEFAULT '',
   image_mime_type text NOT NULL DEFAULT '',
+  registration_required boolean NOT NULL DEFAULT false,
   upcoming boolean,
   repeat_enabled boolean,
   repeat_frequency text,

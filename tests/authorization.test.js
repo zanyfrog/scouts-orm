@@ -82,6 +82,7 @@ test("ORM protects broad data while keeping public payload available", async () 
     const publicResult = await request(baseUrl, "/api/public");
     assert.equal(publicResult.response.status, 200);
     assert.ok(Array.isArray(publicResult.payload.events));
+    assert.equal(typeof publicResult.payload.events[0].registrationRequired, "boolean");
     assert.equal(publicResult.payload.scouts, undefined);
 
     const eventsResult = await request(baseUrl, "/api/events?startDate=2026-04-01&endDate=2026-04-30&page=1&pageSize=2");
@@ -94,6 +95,7 @@ test("ORM protects broad data while keeping public payload available", async () 
     const eventDetailResult = await request(baseUrl, `/api/events/${eventsResult.payload.events[0].id}?includeMedia=false`);
     assert.equal(eventDetailResult.response.status, 200);
     assert.equal(eventDetailResult.payload.event.id, eventsResult.payload.events[0].id);
+    assert.equal(typeof eventDetailResult.payload.event.registrationRequired, "boolean");
     assert.equal(eventDetailResult.payload.event.gallery, undefined);
 
     const broadResult = await request(baseUrl, "/api/data");

@@ -31,6 +31,20 @@ function jsonb(value, fallback = {}) {
   return JSON.stringify(value ?? fallback);
 }
 
+function booleanFromEventField(value) {
+  if (value === true || value === false) return value;
+  const normalized = String(value ?? "").trim().toLowerCase();
+  if (["t", "true", "1", "yes", "y", "required"].includes(normalized)) return true;
+  if (["f", "false", "0", "no", "n", "optional"].includes(normalized)) return false;
+  return false;
+}
+
+function eventRegistrationRequired(event) {
+  return booleanFromEventField(
+    event?.registrationRequired ?? event?.registerRequired ?? event?.requiresRegistration ?? event?.register
+  );
+}
+
 function parseTimestamp(value, endOfDay = false) {
   const source = String(value || "").trim();
   if (!source) return null;
@@ -200,6 +214,7 @@ async function ensureSchema() {
       image_src text NOT NULL DEFAULT '',
       image_filename text NOT NULL DEFAULT '',
       image_mime_type text NOT NULL DEFAULT '',
+      registration_required boolean NOT NULL DEFAULT false,
       upcoming boolean,
       repeat_enabled boolean,
       repeat_frequency text,
@@ -210,6 +225,7 @@ async function ensureSchema() {
       repeat_monthly_weekday text,
       extra jsonb NOT NULL DEFAULT '{}'::jsonb
     );
+    ALTER TABLE events ADD COLUMN IF NOT EXISTS registration_required boolean NOT NULL DEFAULT false;
     CREATE INDEX IF NOT EXISTS events_start_end_idx ON events (start_at, end_at);
     CREATE TABLE IF NOT EXISTS event_activities (
       event_id text NOT NULL REFERENCES events(id) ON DELETE CASCADE,
@@ -407,9 +423,10 @@ async function insertEvent(client, dataDir, event) {
   await client.query(
     `INSERT INTO events (
       id, title, category, start_date, end_date, start_at, end_at, date_label, home_base, location, audience,
-      description, detail_note, image_src, image_filename, image_mime_type, upcoming, repeat_enabled, repeat_frequency,
-      repeat_interval, repeat_until, repeat_monthly_pattern, repeat_monthly_ordinal, repeat_monthly_weekday, extra
-    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25)`,
+      description, detail_note, image_src, image_filename, image_mime_type, registration_required, upcoming,
+      repeat_enabled, repeat_frequency, repeat_interval, repeat_until, repeat_monthly_pattern,
+      repeat_monthly_ordinal, repeat_monthly_weekday, extra
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26)`,
     [
       eventId,
       event.title || "",
@@ -427,6 +444,7 @@ async function insertEvent(client, dataDir, event) {
       image.src,
       image.filename,
       image.mimeType,
+      eventRegistrationRequired(event),
       typeof event.upcoming === "boolean" ? event.upcoming : null,
       typeof event.repeatEnabled === "boolean" ? event.repeatEnabled : null,
       event.repeatFrequency ?? null,
@@ -435,7 +453,7 @@ async function insertEvent(client, dataDir, event) {
       event.repeatMonthlyPattern ?? null,
       event.repeatMonthlyOrdinal ?? null,
       event.repeatMonthlyWeekday ?? null,
-      jsonb(extraWithout(event, ["id", "title", "category", "startDate", "endDate", "dateLabel", "homeBase", "location", "audience", "description", "detailNote", "image", "gallery", "activities", "upcoming", "repeatEnabled", "repeatFrequency", "repeatInterval", "repeatUntil", "repeatMonthlyPattern", "repeatMonthlyOrdinal", "repeatMonthlyWeekday"]))
+      jsonb(extraWithout(event, ["id", "title", "category", "startDate", "endDate", "dateLabel", "homeBase", "location", "audience", "description", "detailNote", "image", "gallery", "activities", "registrationRequired", "registerRequired", "requiresRegistration", "register", "upcoming", "repeatEnabled", "repeatFrequency", "repeatInterval", "repeatUntil", "repeatMonthlyPattern", "repeatMonthlyOrdinal", "repeatMonthlyWeekday"]))
     ]
   );
   if (image.src) {
@@ -496,6 +514,7 @@ function eventFromRow(row, activities = [], media = [], includeMedia = true) {
     description: row.description,
     detailNote: row.detail_note,
     activities,
+    registrationRequired: row.registration_required ?? eventRegistrationRequired(rowExtra(row)),
     upcoming: row.upcoming,
     repeatEnabled: row.repeat_enabled,
     repeatFrequency: row.repeat_frequency,
