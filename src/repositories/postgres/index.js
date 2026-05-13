@@ -45,6 +45,15 @@ function eventRegistrationRequired(event) {
   );
 }
 
+function normalizeEventRegistration(registration) {
+  return {
+    eventId: String(registration?.eventId || "").trim(),
+    personId: String(registration?.personId || "").trim(),
+    registeredAt: String(registration?.registeredAt || "").trim(),
+    registeredByPersonId: String(registration?.registeredByPersonId || "").trim(),
+  };
+}
+
 function parseTimestamp(value, endOfDay = false) {
   const source = String(value || "").trim();
   if (!source) return null;
@@ -251,6 +260,15 @@ async function ensureSchema() {
       name text NOT NULL DEFAULT '',
       metadata jsonb NOT NULL DEFAULT '{}'::jsonb
     );
+    CREATE TABLE IF NOT EXISTS event_registrations (
+      event_id text NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+      person_id text NOT NULL,
+      registered_at timestamptz NOT NULL DEFAULT NOW(),
+      registered_by_person_id text NOT NULL DEFAULT '',
+      metadata jsonb NOT NULL DEFAULT '{}'::jsonb,
+      PRIMARY KEY (event_id, person_id)
+    );
+    CREATE INDEX IF NOT EXISTS event_registrations_event_idx ON event_registrations (event_id, registered_at);
   `);
 }
 
@@ -493,6 +511,7 @@ async function importData(dataDir, payload) {
   await replacePatrols(payload.patrols || []);
   await replaceEvents(dataDir, payload.events || []);
   await replaceHolidays(payload.holidays || []);
+  await replaceEventRegistrations(payload.eventRegistrations || []);
 }
 
 function rowExtra(row) {
@@ -553,7 +572,7 @@ async function getAllEvents(includeMedia = true) {
 }
 
 async function getDataPayload() {
-  const [scouts, adults, adultLeaders, relationships, patrols, events, holidays] = await Promise.all([
+  const [scouts, adults, adultLeaders, relationships, patrols, events, holidays, eventRegistrations] = await Promise.all([
     getPool().query("SELECT * FROM scouts ORDER BY id"),
     getPool().query("SELECT * FROM adults ORDER BY id"),
     getPool().query("SELECT * FROM adult_leaders ORDER BY adult_id, role"),
@@ -561,6 +580,7 @@ async function getDataPayload() {
     getPool().query("SELECT * FROM patrols ORDER BY name"),
     getAllEvents(true),
     getPool().query("SELECT * FROM holidays ORDER BY holiday_date NULLS LAST, id"),
+    getPool().query("SELECT * FROM event_registrations ORDER BY event_id, registered_at, person_id"),
   ]);
   return {
     scouts: scouts.rows.map(scoutFromRow),
@@ -569,6 +589,12 @@ async function getDataPayload() {
     adultScoutRelationships: relationships.rows.map((row) => ({ ...rowExtra(row), adultId: row.adult_id, scoutId: row.scout_id, relationship: row.relationship, priority: row.priority })),
     patrols: patrols.rows.map((row) => ({ ...rowExtra(row), name: row.name, badge: row.badge })),
     events,
+    eventRegistrations: eventRegistrations.rows.map((row) => normalizeEventRegistration({
+      eventId: row.event_id,
+      personId: row.person_id,
+      registeredAt: row.registered_at?.toISOString?.() || row.registered_at,
+      registeredByPersonId: row.registered_by_person_id,
+    })).filter((registration) => registration.eventId && registration.personId),
     holidays: holidays.rows.map((row) => ({ ...(row.metadata || {}), id: row.id, date: row.holiday_date ? row.holiday_date.toISOString().slice(0, 10) : "", name: row.name })),
   };
 }
@@ -621,6 +647,58 @@ async function getEventById(eventId, { includeMedia = true } = {}) {
   return eventFromRow(row, activities.rows.map((activity) => activity.activity), media.rows, includeMedia);
 }
 
+async function getEventRegistrations(eventId) {
+  const rows = (await getPool().query(
+    "SELECT * FROM event_registrations WHERE event_id = $1 ORDER BY registered_at, person_id",
+    [eventId]
+  )).rows;
+  return rows.map((row) => normalizeEventRegistration({
+    eventId: row.event_id,
+    personId: row.person_id,
+    registeredAt: row.registered_at?.toISOString?.() || row.registered_at,
+    registeredByPersonId: row.registered_by_person_id,
+  })).filter((registration) => registration.eventId && registration.personId);
+}
+
+async function registerForEvent(eventId, personId, options = {}) {
+  const safeRegistration = normalizeEventRegistration({
+    eventId,
+    personId,
+    registeredByPersonId: options.registeredByPersonId,
+    registeredAt: options.registeredAt || new Date().toISOString(),
+  });
+  const row = (await getPool().query(
+    `INSERT INTO event_registrations (event_id, person_id, registered_at, registered_by_person_id, metadata)
+     VALUES ($1, $2, $3::timestamptz, $4, '{}'::jsonb)
+     ON CONFLICT (event_id, person_id) DO UPDATE
+     SET registered_by_person_id = COALESCE(NULLIF(event_registrations.registered_by_person_id, ''), EXCLUDED.registered_by_person_id)
+     RETURNING *`,
+    [safeRegistration.eventId, safeRegistration.personId, safeRegistration.registeredAt, safeRegistration.registeredByPersonId]
+  )).rows[0];
+  return normalizeEventRegistration({
+    eventId: row.event_id,
+    personId: row.person_id,
+    registeredAt: row.registered_at?.toISOString?.() || row.registered_at,
+    registeredByPersonId: row.registered_by_person_id,
+  });
+}
+
+async function replaceEventRegistrations(registrations) {
+  await withTransaction(async (client) => {
+    await client.query("DELETE FROM event_registrations");
+    for (const registration of Array.isArray(registrations) ? registrations : []) {
+      const normalized = normalizeEventRegistration(registration);
+      if (!normalized.eventId || !normalized.personId) {
+        continue;
+      }
+      await client.query(
+        "INSERT INTO event_registrations (event_id, person_id, registered_at, registered_by_person_id, metadata) VALUES ($1, $2, $3::timestamptz, $4, '{}'::jsonb)",
+        [normalized.eventId, normalized.personId, normalized.registeredAt || new Date().toISOString(), normalized.registeredByPersonId]
+      );
+    }
+  });
+}
+
 module.exports = {
   enabled,
   mediaDirName,
@@ -633,6 +711,7 @@ module.exports = {
   getHolidays,
   getEvents,
   getEventById,
+  getEventRegistrations,
   replaceScouts,
   saveScout,
   replaceAdults,
@@ -643,4 +722,6 @@ module.exports = {
   replacePatrols,
   replaceHolidays,
   replaceEvents,
+  replaceEventRegistrations,
+  registerForEvent,
 };

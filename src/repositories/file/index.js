@@ -11,6 +11,7 @@ const files = {
   adultScoutRelationships: path.join(dataDir, "adult_scout_relationships.csv"),
   patrols: path.join(dataDir, "patrols.json"),
   events: path.join(dataDir, "events.json"),
+  eventRegistrations: path.join(dataDir, "event-registrations.json"),
   holidays: path.join(dataDir, "holidays.json"),
   eventImageReferences: path.join(dataDir, "event-image-references.json"),
   eventsImport: path.join(dataDir, "events.tsv"),
@@ -314,6 +315,15 @@ function normalizeEvent(event) {
   return {
     ...(event || {}),
     registrationRequired: eventRegistrationRequired(event),
+  };
+}
+
+function normalizeEventRegistration(registration) {
+  return {
+    eventId: String(registration?.eventId || "").trim(),
+    personId: String(registration?.personId || "").trim(),
+    registeredAt: String(registration?.registeredAt || "").trim(),
+    registeredByPersonId: String(registration?.registeredByPersonId || "").trim(),
   };
 }
 
@@ -1027,6 +1037,10 @@ function ensureFileDataFiles() {
     writeJson(files.holidays, []);
   }
 
+  if (!fs.existsSync(files.eventRegistrations)) {
+    writeJson(files.eventRegistrations, []);
+  }
+
   const storedEvents = readJson(files.events, []);
   const storedEventImageReferences = readJson(files.eventImageReferences, {});
   const eventImageReferences = buildEventImageReferences(storedEvents, storedEventImageReferences);
@@ -1048,7 +1062,10 @@ async function ensureDataFiles() {
 
 function getFileDataPayload() {
   if (csvDatabaseEnabled()) {
-    return getCsvDatabasePayload();
+    return {
+      ...getCsvDatabasePayload(),
+      eventRegistrations: readJson(files.eventRegistrations, []).map(normalizeEventRegistration).filter((registration) => registration.eventId && registration.personId),
+    };
   }
 
   return {
@@ -1058,6 +1075,7 @@ function getFileDataPayload() {
     adultScoutRelationships: readCsv(files.adultScoutRelationships),
     patrols: readJson(files.patrols, []),
     events: readJson(files.events, []).map(normalizeEvent),
+    eventRegistrations: readJson(files.eventRegistrations, []).map(normalizeEventRegistration).filter((registration) => registration.eventId && registration.personId),
     holidays: readJson(files.holidays, []).map(normalizeHoliday).filter((holiday) => holiday.id && holiday.date),
   };
 }
@@ -1227,6 +1245,55 @@ function getEventById(eventId, { includeMedia = true } = {}) {
     return null;
   }
   return includeMedia ? normalizeEvent(event) : eventListItem(event);
+}
+
+function getEventRegistrations(eventId) {
+  const safeEventId = String(eventId || "").trim();
+  if (!safeEventId) {
+    return db.enabled() ? Promise.resolve([]) : [];
+  }
+  if (db.enabled()) {
+    return db.getEventRegistrations(safeEventId);
+  }
+  return readJson(files.eventRegistrations, [])
+    .map(normalizeEventRegistration)
+    .filter((registration) => registration.eventId === safeEventId && registration.personId);
+}
+
+async function registerForEvent(eventId, personId, options = {}) {
+  const safeEventId = String(eventId || "").trim();
+  const safePersonId = String(personId || "").trim();
+  const safeRegisteredByPersonId = String(options.registeredByPersonId || "").trim();
+  if (!safeEventId || !safePersonId) {
+    throw new Error("Event id and person id are required");
+  }
+  if (db.enabled()) {
+    return db.registerForEvent(safeEventId, safePersonId, { registeredByPersonId: safeRegisteredByPersonId });
+  }
+
+  const registrations = readJson(files.eventRegistrations, []).map(normalizeEventRegistration).filter((registration) => registration.eventId && registration.personId);
+  const existingIndex = registrations.findIndex((registration) => registration.eventId === safeEventId && registration.personId === safePersonId);
+  const nextRegistration = existingIndex >= 0
+    ? {
+        ...registrations[existingIndex],
+        registeredByPersonId: registrations[existingIndex].registeredByPersonId || safeRegisteredByPersonId,
+        registeredAt: registrations[existingIndex].registeredAt || new Date().toISOString(),
+      }
+    : {
+        eventId: safeEventId,
+        personId: safePersonId,
+        registeredAt: new Date().toISOString(),
+        registeredByPersonId: safeRegisteredByPersonId,
+      };
+
+  if (existingIndex >= 0) {
+    registrations[existingIndex] = nextRegistration;
+  } else {
+    registrations.push(nextRegistration);
+  }
+
+  writeJson(files.eventRegistrations, registrations);
+  return nextRegistration;
 }
 
 function saveScouts(scouts) {
@@ -1440,6 +1507,7 @@ module.exports = {
   getHolidays,
   getEventById,
   getEvents,
+  getEventRegistrations,
   saveScouts,
   saveScout,
   saveAdults,
@@ -1450,4 +1518,5 @@ module.exports = {
   savePatrols,
   saveHolidays,
   saveEvents,
+  registerForEvent,
 };

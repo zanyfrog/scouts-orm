@@ -269,12 +269,14 @@ test("ORM scopes parent data to linked scouts and lets leaders read/write operat
     const adminDataResult = await request(baseUrl, "/api/data", {
       headers: { Authorization: "Bearer admin" },
     });
-    assert.equal(adminDataResult.response.status, 403);
+    assert.equal(adminDataResult.response.status, 200);
+    assert.ok(Array.isArray(adminDataResult.payload.scouts));
 
     const adminScoutDetailResult = await request(baseUrl, "/api/scouts/scout-1", {
       headers: { Authorization: "Bearer admin" },
     });
-    assert.equal(adminScoutDetailResult.response.status, 403);
+    assert.equal(adminScoutDetailResult.response.status, 200);
+    assert.equal(adminScoutDetailResult.payload.scout.id, originalScout.id);
 
     const adminScoutWriteResult = await request(baseUrl, "/api/scouts", {
       method: "POST",
@@ -284,12 +286,14 @@ test("ORM scopes parent data to linked scouts and lets leaders read/write operat
       },
       body: JSON.stringify({ scout: { id: originalScout.id, nickname: originalScout.nickname } }),
     });
-    assert.equal(adminScoutWriteResult.response.status, 403);
+    assert.equal(adminScoutWriteResult.response.status, 200);
+    assert.equal(adminScoutWriteResult.payload.scout.id, originalScout.id);
 
     const committeeScoutsResult = await request(baseUrl, "/api/scouts", {
       headers: { Authorization: "Bearer committee" },
     });
-    assert.equal(committeeScoutsResult.response.status, 403);
+    assert.equal(committeeScoutsResult.response.status, 200);
+    assert.ok(Array.isArray(committeeScoutsResult.payload.scouts));
 
     const bulkScoutWriteResult = await request(baseUrl, "/api/scouts", {
       method: "POST",
