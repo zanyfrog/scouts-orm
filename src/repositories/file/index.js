@@ -1296,6 +1296,22 @@ async function registerForEvent(eventId, personId, options = {}) {
   return nextRegistration;
 }
 
+async function removeEventRegistration(eventId, personId) {
+  const safeEventId = String(eventId || "").trim();
+  const safePersonId = String(personId || "").trim();
+  if (!safeEventId || !safePersonId) {
+    throw new Error("Event id and person id are required");
+  }
+  if (db.enabled()) {
+    return db.removeEventRegistration(safeEventId, safePersonId);
+  }
+
+  const registrations = readJson(files.eventRegistrations, []).map(normalizeEventRegistration).filter((registration) => registration.eventId && registration.personId);
+  const nextRegistrations = registrations.filter((registration) => !(registration.eventId === safeEventId && registration.personId === safePersonId));
+  writeJson(files.eventRegistrations, nextRegistrations);
+  return { eventId: safeEventId, personId: safePersonId, removed: nextRegistrations.length !== registrations.length };
+}
+
 function saveScouts(scouts) {
   const normalizedScouts = scouts.map(normalizeScout);
   if (db.enabled()) {
@@ -1519,4 +1535,5 @@ module.exports = {
   saveHolidays,
   saveEvents,
   registerForEvent,
+  removeEventRegistration,
 };

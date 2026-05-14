@@ -683,6 +683,19 @@ async function registerForEvent(eventId, personId, options = {}) {
   });
 }
 
+async function removeEventRegistration(eventId, personId) {
+  const safeEventId = String(eventId || "").trim();
+  const safePersonId = String(personId || "").trim();
+  if (!safeEventId || !safePersonId) {
+    throw new Error("Event id and person id are required");
+  }
+  const result = await getPool().query(
+    "DELETE FROM event_registrations WHERE event_id = $1 AND person_id = $2",
+    [safeEventId, safePersonId]
+  );
+  return { eventId: safeEventId, personId: safePersonId, removed: result.rowCount > 0 };
+}
+
 async function replaceEventRegistrations(registrations) {
   await withTransaction(async (client) => {
     await client.query("DELETE FROM event_registrations");
@@ -724,4 +737,5 @@ module.exports = {
   replaceEvents,
   replaceEventRegistrations,
   registerForEvent,
+  removeEventRegistration,
 };

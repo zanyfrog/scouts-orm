@@ -1,1 +1,44 @@
-[]
+[
+  {
+    "eventId": "camping-12",
+    "personId": "scout-11",
+    "registeredAt": "2026-05-13T15:43:54.792Z",
+    "registeredByPersonId": "adult-parent-parent.harris"
+  },
+  {
+    "eventId": "camping-12",
+    "personId": "scout-13",
+    "registeredAt": "2026-05-13T15:44:00.339Z",
+    "registeredByPersonId": "adult-parent-parent.harris"
+  },
+  {
+    "eventId": "camping-12",
+    "personId": "scout-14",
+    "registeredAt": "2026-05-13T15:44:02.280Z",
+    "registeredByPersonId": "adult-parent-parent.harris"
+  },
+  {
+    "eventId": "camping-12",
+    "personId": "scout-15",
+    "registeredAt": "2026-05-13T15:44:06.731Z",
+    "registeredByPersonId": "adult-parent-parent.harris"
+  },
+  {
+    "eventId": "camping-12",
+    "personId": "scout-19",
+    "registeredAt": "2026-05-13T15:44:23.922Z",
+    "registeredByPersonId": "adult-parent-parent.harris"
+  },
+  {
+    "eventId": "camping-12",
+    "personId": "adult-2",
+    "registeredAt": "2026-05-13T15:44:42.037Z",
+    "registeredByPersonId": "adult-parent-parent.harris"
+  },
+  {
+    "eventId": "camping-12",
+    "personId": "adult-3",
+    "registeredAt": "2026-05-13T15:44:44.712Z",
+    "registeredByPersonId": "adult-parent-parent.harris"
+  }
+]
