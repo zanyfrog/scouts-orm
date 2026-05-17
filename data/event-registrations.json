@@ -286,5 +286,23 @@
     "personId": "scout-12",
     "registeredAt": "2026-05-17T15:04:25.616Z",
     "registeredByPersonId": "adult-1"
+  },
+  {
+    "eventId": "camping-12",
+    "personId": "scout-10",
+    "registeredAt": "2026-05-17T17:57:54.764Z",
+    "registeredByPersonId": "adult-1"
+  },
+  {
+    "eventId": "camping-and-whitewater-10",
+    "personId": "scout-10",
+    "registeredAt": "2026-05-17T17:57:57.328Z",
+    "registeredByPersonId": "adult-1"
+  },
+  {
+    "eventId": "camping-and-whitewater-10",
+    "personId": "scout-28",
+    "registeredAt": "2026-05-17T18:16:19.813Z",
+    "registeredByPersonId": "adult-1"
   }
 ]
