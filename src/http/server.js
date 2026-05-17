@@ -800,6 +800,20 @@ async function handleApi(req, res) {
     return true;
   }
 
+  if (req.method === "DELETE" && url.pathname.startsWith("/api/scouts/")) {
+    const actor = await requireActor(req, res, hasAdultLeaderScoutAccess);
+    if (!actor) return true;
+    const scoutId = decodeURIComponent(url.pathname.slice("/api/scouts/".length));
+    const deleted = await orm.deleteScout(scoutId);
+    if (!deleted) {
+      json(res, 404, { error: "Scout not found" });
+      return true;
+    }
+    invalidateReadCaches();
+    json(res, 200, { ok: true, deleted: true });
+    return true;
+  }
+
   if (req.method === "POST" && url.pathname === "/api/adults") {
     const actor = await requireActor(req, res, hasOperationalWriteAccess);
     if (!actor) return true;
@@ -863,7 +877,7 @@ async function handleApi(req, res) {
   }
 
   if (req.method === "POST" && url.pathname === "/api/adult-scout-relationships") {
-    const actor = await requireActor(req, res, hasAdministrator);
+    const actor = await requireActor(req, res, hasOperationalWriteAccess);
     if (!actor) return true;
     const body = JSON.parse((await readBody(req)) || "{}");
     await orm.saveAdultScoutRelationships(Array.isArray(body.adultScoutRelationships) ? body.adultScoutRelationships : []);

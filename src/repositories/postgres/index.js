@@ -321,7 +321,7 @@ async function getAdultsByIds(ids) {
 }
 
 async function saveScout(scout) {
-  const saved = await getPool().query(
+	const saved = await getPool().query(
     `INSERT INTO scouts (id, name, first_name, last_name, nickname, gender, patrol, patrol_badge, rank, leadership_role, avatar, extra)
      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
      ON CONFLICT (id) DO UPDATE SET
@@ -339,7 +339,17 @@ async function saveScout(scout) {
      RETURNING *`,
     [scout.id, scout.name || "", scout.firstName || "", scout.lastName || "", scout.nickname || "", scout.gender || "", scout.patrol || "", scout.patrolBadge || "", scout.rank || "", scout.leadershipRole || "", scout.avatar || "", jsonb(extraWithout(scout, ["id", "name", "firstName", "lastName", "nickname", "gender", "patrol", "patrolBadge", "rank", "leadershipRole", "avatar"]))]
   );
-  return scoutFromRow(saved.rows[0]);
+	return scoutFromRow(saved.rows[0]);
+}
+
+async function deleteScout(scoutId) {
+  const result = await withTransaction(async (client) => {
+    const deleted = await client.query("DELETE FROM scouts WHERE id = $1", [scoutId]);
+    await client.query("DELETE FROM adult_scout_relationships WHERE scout_id = $1", [scoutId]);
+    await client.query("DELETE FROM event_registrations WHERE person_id = $1", [scoutId]);
+    return deleted;
+  });
+  return result.rowCount > 0;
 }
 
 async function replaceAdults(adults) {
@@ -727,6 +737,7 @@ module.exports = {
   getEventRegistrations,
   replaceScouts,
   saveScout,
+  deleteScout,
   replaceAdults,
   saveAdult,
   deleteAdult,

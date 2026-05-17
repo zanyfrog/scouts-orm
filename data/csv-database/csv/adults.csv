@@ -3,7 +3,7 @@ adult-1,Kelly Harris,Adult leader,zanyfrog@gmail.com,,4436919511,{}
 adult-2,Matt Krok,Adult leader,matt.krok@example.com,,,{}
 adult-3,Cristin Treaster,Adult leader,cristin.treaster@example.com,,,{}
 adult-parent-guardian.boling,Guardian Boling,Guardian,jake.boling1@example.com,,,{}
-adult-parent-boling.family.contact,Boling Family Contact,Guardian,jake.boling2@example.com,,,{}
+adult-parent-boling.family.contact,Chip Boling,Guardian,jake.boling2@example.com,,,{}
 adult-parent-parent.bukszar,Parent Bukszar,Parent,henry.bukszar1@example.com,,,{}
 adult-parent-bukszar.family.contact,Bukszar Family Contact,Parent,henry.bukszar2@example.com,,,{}
 adult-parent-parent.canterbury,Parent Canterbury,Parent,judah.canterbury1@example.com,,,{}
@@ -19,8 +19,8 @@ adult-parent-guardian.grepps,Guardian Grepps,Guardian,lou.grepps1@example.com,,,
 adult-parent-grepps.family.contact,Grepps Family Contact,Parent,lou.grepps2@example.com,,,{}
 adult-parent-parent.harris,Julia Harris (remove),Parent,jlfkeh@gmail.com,,,{}
 adult-parent-harris.family.contact,Harris Family Contact,Parent,jaime.harris2@example.com,,,{}
-adult-parent-guardian.krok,Guardian Krok,Guardian,matthew.krok1@example.com,,,{}
-adult-parent-krok.family.contact,Krok Family Contact,Parent,rachel.krok2@example.com,,,{}
+adult-parent-guardian.krok,Kelly Krok,Guardian,matthew.krok1@example.com,,,{}
+adult-parent-krok.family.contact,Kelly Krok,Parent,rachel.krok2@example.com,,,{}
 adult-parent-parent.treaster,Parent Treaster,Parent,zachary.treaster1@example.com,,,{}
 adult-parent-treaster.family.contact,Treaster Family Contact,Guardian,zachary.treaster2@example.com,,,{}
 adult-parent-parent.flatley,Parent Flatley,Parent,bryce.flatley1@example.com,,,{}
@@ -42,3 +42,4 @@ adult-parent-parent.seitz,Parent Seitz,Parent,will.seitz1@example.com,,,{}
 adult-parent-guardian.yosephine,Guardian Yosephine,Guardian,matthew.yosephine1@example.com,,,{}
 adult-parent-yosephine.family.contact,Yosephine Family Contact,Parent,matthew.yosephine2@example.com,,,{}
 adult-4,Julia Harris,Adult leader,jlfkeh@gmail.com,,,{}
+adult-5,Anton's parent 1,Parent,anton.s.parent.1@example.com,,,{}

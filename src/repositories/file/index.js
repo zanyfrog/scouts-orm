@@ -1324,7 +1324,7 @@ function saveScouts(scouts) {
 }
 
 async function saveScout(scout) {
-  const normalizedScout = normalizeScout(scout);
+	const normalizedScout = normalizeScout(scout);
   if (db.enabled()) {
     return db.saveScout(normalizedScout);
   }
@@ -1348,7 +1348,35 @@ async function saveScout(scout) {
     scouts[index] = normalizedScout;
   }
   writeFileScouts(scouts);
-  return normalizedScout;
+	return normalizedScout;
+}
+
+async function deleteScout(scoutId) {
+  const safeScoutId = String(scoutId || "").trim();
+  if (!safeScoutId) {
+    return false;
+  }
+  if (db.enabled()) {
+    return db.deleteScout(safeScoutId);
+  }
+
+  const payload = getFileDataPayload();
+  const nextScouts = payload.scouts.filter((scout) => String(scout.id) !== safeScoutId);
+  if (nextScouts.length === payload.scouts.length) {
+    return false;
+  }
+  const nextAdultScoutRelationships = payload.adultScoutRelationships.filter((relationship) => String(relationship.scoutId) !== safeScoutId);
+  const nextEventRegistrations = (payload.eventRegistrations || []).filter((registration) => String(registration.personId) !== safeScoutId);
+
+  if (csvDatabaseEnabled()) {
+    saveCsvDatabaseScouts(nextScouts);
+    saveCsvDatabaseAdultScoutRelationships(nextAdultScoutRelationships);
+  } else {
+    saveScouts(nextScouts);
+    saveAdultScoutRelationships(nextAdultScoutRelationships);
+  }
+  writeJson(files.eventRegistrations, nextEventRegistrations);
+  return true;
 }
 
 function saveAdults(adults) {
@@ -1526,6 +1554,7 @@ module.exports = {
   getEventRegistrations,
   saveScouts,
   saveScout,
+  deleteScout,
   saveAdults,
   saveAdult,
   deleteAdult,

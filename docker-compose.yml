@@ -28,3 +28,8 @@ services:
 
 volumes:
   scouts-orm-postgres:
+
+networks:
+  default:
+    external: true
+    name: scouts-orm_default

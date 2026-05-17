@@ -318,7 +318,7 @@ test("ORM scopes parent data to linked scouts and lets leaders read/write operat
     });
     assert.equal(bulkScoutWriteResult.response.status, 400);
 
-    const deniedRelationshipWrite = await request(baseUrl, "/api/adult-scout-relationships", {
+    const leaderRelationshipWrite = await request(baseUrl, "/api/adult-scout-relationships", {
       method: "POST",
       headers: {
         Authorization: "Bearer leader",
@@ -326,7 +326,7 @@ test("ORM scopes parent data to linked scouts and lets leaders read/write operat
       },
       body: JSON.stringify({ adultScoutRelationships: leaderResult.payload.adultScoutRelationships }),
     });
-    assert.equal(deniedRelationshipWrite.response.status, 403);
+    assert.equal(leaderRelationshipWrite.response.status, 200);
   } finally {
     await close(server);
     await close(authServer);
