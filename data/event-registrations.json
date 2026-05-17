@@ -1,12 +1,6 @@
 [
   {
     "eventId": "camping-12",
-    "personId": "scout-11",
-    "registeredAt": "2026-05-13T15:43:54.792Z",
-    "registeredByPersonId": "adult-parent-parent.harris"
-  },
-  {
-    "eventId": "camping-12",
     "personId": "scout-13",
     "registeredAt": "2026-05-13T15:44:00.339Z",
     "registeredByPersonId": "adult-parent-parent.harris"
@@ -57,12 +51,6 @@
     "eventId": "backpacking-the-at-11",
     "personId": "scout-12",
     "registeredAt": "2026-05-15T00:46:27.103Z",
-    "registeredByPersonId": "adult-1"
-  },
-  {
-    "eventId": "backpacking-the-at-11",
-    "personId": "scout-11",
-    "registeredAt": "2026-05-15T00:46:29.030Z",
     "registeredByPersonId": "adult-1"
   },
   {
@@ -267,6 +255,36 @@
     "eventId": "summer-camp-9",
     "personId": "scout-26",
     "registeredAt": "2026-05-15T15:53:22.789Z",
+    "registeredByPersonId": "adult-1"
+  },
+  {
+    "eventId": "camping-12",
+    "personId": "scout-24",
+    "registeredAt": "2026-05-17T14:46:52.623Z",
+    "registeredByPersonId": "adult-1"
+  },
+  {
+    "eventId": "camping-and-whitewater-10",
+    "personId": "scout-24",
+    "registeredAt": "2026-05-17T14:49:59.882Z",
+    "registeredByPersonId": "adult-1"
+  },
+  {
+    "eventId": "camping-12",
+    "personId": "scout-11",
+    "registeredAt": "2026-05-17T14:59:58.845Z",
+    "registeredByPersonId": "adult-1"
+  },
+  {
+    "eventId": "camping-and-whitewater-10",
+    "personId": "scout-11",
+    "registeredAt": "2026-05-17T15:00:03.650Z",
+    "registeredByPersonId": "adult-1"
+  },
+  {
+    "eventId": "sea-base-high-adventure-8",
+    "personId": "scout-12",
+    "registeredAt": "2026-05-17T15:04:25.616Z",
     "registeredByPersonId": "adult-1"
   }
 ]
