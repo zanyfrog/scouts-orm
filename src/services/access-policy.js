@@ -122,7 +122,7 @@ function canRegisterForPerson(actor, targetPersonId, data = {}) {
 
 function applyScoutPatch(existingScout, patch, actor) {
   const allowedFields = hasAdultLeaderScoutAccess(actor)
-    ? ["id", "name", "firstName", "lastName", "nickname", "gender", "patrol", "patrolBadge", "rank", "leadershipRole", "avatar"]
+    ? ["id", "name", "firstName", "lastName", "nickname", "gender", "patrol", "patrolBadge", "rank", "leadershipRole", "leadershipRoles", "avatar"]
     : ["firstName", "lastName", "nickname", "gender", "avatar"];
   const nextScout = { ...(existingScout || {}) };
   for (const field of allowedFields) {

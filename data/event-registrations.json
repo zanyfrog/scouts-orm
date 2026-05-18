@@ -304,5 +304,17 @@
     "personId": "scout-28",
     "registeredAt": "2026-05-17T18:16:19.813Z",
     "registeredByPersonId": "adult-1"
+  },
+  {
+    "eventId": "camping-12",
+    "personId": "scout-9",
+    "registeredAt": "2026-05-18T02:27:28.192Z",
+    "registeredByPersonId": "adult-1"
+  },
+  {
+    "eventId": "camping-and-whitewater-10",
+    "personId": "scout-9",
+    "registeredAt": "2026-05-18T02:27:32.265Z",
+    "registeredByPersonId": "adult-1"
   }
 ]
