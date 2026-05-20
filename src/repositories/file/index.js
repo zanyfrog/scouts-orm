@@ -12,6 +12,7 @@ const files = {
   patrols: path.join(dataDir, "patrols.json"),
   events: path.join(dataDir, "events.json"),
   eventRegistrations: path.join(dataDir, "event-registrations.json"),
+  packingLists: path.join(dataDir, "packing-lists.json"),
   holidays: path.join(dataDir, "holidays.json"),
   eventImageReferences: path.join(dataDir, "event-image-references.json"),
   eventsImport: path.join(dataDir, "events.tsv"),
@@ -311,10 +312,63 @@ function eventRegistrationRequired(event) {
   );
 }
 
+function slugify(value, fallback = "item") {
+  const slug = String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  return slug || fallback;
+}
+
+function normalizePackingItem(item = {}, index = 0) {
+  const name = String(item.name || item.item || "").trim();
+  const category = String(item.category || "General").trim() || "General";
+  return {
+    id: String(item.id || `${slugify(category)}-${slugify(name, `item-${index + 1}`)}`).trim(),
+    name,
+    category,
+    quantity: String(item.quantity || "").trim(),
+    notes: String(item.notes || item.note || "").trim(),
+    required: item.required === false ? false : true,
+    scope: String(item.scope || "per-person").trim() || "per-person",
+  };
+}
+
+function normalizePackingList(list = {}, index = 0) {
+  const title = String(list.title || list.name || "").trim();
+  return {
+    id: String(list.id || slugify(title, `packing-list-${index + 1}`)).trim(),
+    title: title || "Untitled packing list",
+    description: String(list.description || "").trim(),
+    categories: Array.isArray(list.categories)
+      ? list.categories.map((category) => String(category || "").trim()).filter(Boolean)
+      : [],
+    items: (Array.isArray(list.items) ? list.items : [])
+      .map((item, itemIndex) => normalizePackingItem(item, itemIndex))
+      .filter((item) => item.name),
+  };
+}
+
+function normalizeEventPackingListIds(value) {
+  return [...new Set((Array.isArray(value) ? value : [])
+    .map((id) => String(id || "").trim())
+    .filter(Boolean))];
+}
+
+function normalizeEventPackingItems(value) {
+  return (Array.isArray(value) ? value : [])
+    .map((item, index) => normalizePackingItem(item, index))
+    .filter((item) => item.name);
+}
+
 function normalizeEvent(event) {
   return {
     ...(event || {}),
     registrationRequired: eventRegistrationRequired(event),
+    packingListIds: normalizeEventPackingListIds(event?.packingListIds),
+    packingItems: normalizeEventPackingItems(event?.packingItems),
   };
 }
 
@@ -1041,6 +1095,10 @@ function ensureFileDataFiles() {
     writeJson(files.eventRegistrations, []);
   }
 
+  if (!fs.existsSync(files.packingLists)) {
+    writeJson(files.packingLists, []);
+  }
+
   const storedEvents = readJson(files.events, []);
   const storedEventImageReferences = readJson(files.eventImageReferences, {});
   const eventImageReferences = buildEventImageReferences(storedEvents, storedEventImageReferences);
@@ -1065,6 +1123,7 @@ function getFileDataPayload() {
     return {
       ...getCsvDatabasePayload(),
       eventRegistrations: readJson(files.eventRegistrations, []).map(normalizeEventRegistration).filter((registration) => registration.eventId && registration.personId),
+      packingLists: readJson(files.packingLists, []).map(normalizePackingList).filter((list) => list.id),
     };
   }
 
@@ -1076,6 +1135,7 @@ function getFileDataPayload() {
     patrols: readJson(files.patrols, []),
     events: readJson(files.events, []).map(normalizeEvent),
     eventRegistrations: readJson(files.eventRegistrations, []).map(normalizeEventRegistration).filter((registration) => registration.eventId && registration.personId),
+    packingLists: readJson(files.packingLists, []).map(normalizePackingList).filter((list) => list.id),
     holidays: readJson(files.holidays, []).map(normalizeHoliday).filter((holiday) => holiday.id && holiday.date),
   };
 }
@@ -1516,6 +1576,23 @@ function getHolidays() {
   return readJson(files.holidays, []).map(normalizeHoliday).filter((holiday) => holiday.id && holiday.date);
 }
 
+function getPackingLists() {
+  if (db.enabled()) {
+    return db.getPackingLists();
+  }
+  return readJson(files.packingLists, []).map(normalizePackingList).filter((list) => list.id);
+}
+
+function savePackingLists(packingLists) {
+  const normalized = (Array.isArray(packingLists) ? packingLists : [])
+    .map(normalizePackingList)
+    .filter((list) => list.id);
+  if (db.enabled()) {
+    return db.replacePackingLists(normalized);
+  }
+  writeJson(files.packingLists, normalized);
+}
+
 function saveHolidays(holidays) {
   const normalized = (Array.isArray(holidays) ? holidays : []).map(normalizeHoliday).filter((holiday) => holiday.id && holiday.date);
   if (db.enabled()) {
@@ -1549,6 +1626,7 @@ module.exports = {
   getScoutsByIds,
   getAdultsByIds,
   getHolidays,
+  getPackingLists,
   getEventById,
   getEvents,
   getEventRegistrations,
@@ -1562,6 +1640,7 @@ module.exports = {
   saveAdultScoutRelationships,
   savePatrols,
   saveHolidays,
+  savePackingLists,
   saveEvents,
   registerForEvent,
   removeEventRegistration,

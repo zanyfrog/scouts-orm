@@ -269,6 +269,13 @@ async function ensureSchema() {
       PRIMARY KEY (event_id, person_id)
     );
     CREATE INDEX IF NOT EXISTS event_registrations_event_idx ON event_registrations (event_id, registered_at);
+    CREATE TABLE IF NOT EXISTS packing_lists (
+      id text PRIMARY KEY,
+      title text NOT NULL DEFAULT '',
+      description text NOT NULL DEFAULT '',
+      categories jsonb NOT NULL DEFAULT '[]'::jsonb,
+      items jsonb NOT NULL DEFAULT '[]'::jsonb
+    );
   `);
 }
 
@@ -522,6 +529,7 @@ async function importData(dataDir, payload) {
   await replaceEvents(dataDir, payload.events || []);
   await replaceHolidays(payload.holidays || []);
   await replaceEventRegistrations(payload.eventRegistrations || []);
+  await replacePackingLists(payload.packingLists || []);
 }
 
 function rowExtra(row) {
@@ -582,7 +590,7 @@ async function getAllEvents(includeMedia = true) {
 }
 
 async function getDataPayload() {
-  const [scouts, adults, adultLeaders, relationships, patrols, events, holidays, eventRegistrations] = await Promise.all([
+  const [scouts, adults, adultLeaders, relationships, patrols, events, holidays, eventRegistrations, packingLists] = await Promise.all([
     getPool().query("SELECT * FROM scouts ORDER BY id"),
     getPool().query("SELECT * FROM adults ORDER BY id"),
     getPool().query("SELECT * FROM adult_leaders ORDER BY adult_id, role"),
@@ -591,6 +599,7 @@ async function getDataPayload() {
     getAllEvents(true),
     getPool().query("SELECT * FROM holidays ORDER BY holiday_date NULLS LAST, id"),
     getPool().query("SELECT * FROM event_registrations ORDER BY event_id, registered_at, person_id"),
+    getPool().query("SELECT * FROM packing_lists ORDER BY title, id"),
   ]);
   return {
     scouts: scouts.rows.map(scoutFromRow),
@@ -606,7 +615,36 @@ async function getDataPayload() {
       registeredByPersonId: row.registered_by_person_id,
     })).filter((registration) => registration.eventId && registration.personId),
     holidays: holidays.rows.map((row) => ({ ...(row.metadata || {}), id: row.id, date: row.holiday_date ? row.holiday_date.toISOString().slice(0, 10) : "", name: row.name })),
+    packingLists: packingLists.rows.map(packingListFromRow),
   };
+}
+
+function packingListFromRow(row) {
+  return {
+    id: row.id,
+    title: row.title,
+    description: row.description,
+    categories: Array.isArray(row.categories) ? row.categories : [],
+    items: Array.isArray(row.items) ? row.items : [],
+  };
+}
+
+async function getPackingLists() {
+  const result = await getPool().query("SELECT * FROM packing_lists ORDER BY title, id");
+  return result.rows.map(packingListFromRow);
+}
+
+async function replacePackingLists(packingLists) {
+  await withTransaction(async (client) => {
+    await client.query("DELETE FROM packing_lists");
+    for (const list of Array.isArray(packingLists) ? packingLists : []) {
+      if (!String(list?.id || "").trim()) continue;
+      await client.query(
+        "INSERT INTO packing_lists (id, title, description, categories, items) VALUES ($1, $2, $3, $4, $5)",
+        [list.id, list.title || "", list.description || "", jsonb(list.categories || []), jsonb(list.items || [])]
+      );
+    }
+  });
 }
 
 async function getHolidays() {
@@ -732,6 +770,7 @@ module.exports = {
   getScoutsByIds,
   getAdultsByIds,
   getHolidays,
+  getPackingLists,
   getEvents,
   getEventById,
   getEventRegistrations,
@@ -745,6 +784,7 @@ module.exports = {
   replaceAdultScoutRelationships,
   replacePatrols,
   replaceHolidays,
+  replacePackingLists,
   replaceEvents,
   replaceEventRegistrations,
   registerForEvent,

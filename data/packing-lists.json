@@ -1,0 +1,3557 @@
+[
+  {
+    "id": "base-personal-packing-list",
+    "title": "Base Personal Packing List",
+    "description": "Prepared packing list imported from scouting_packing_lists.md.",
+    "categories": [
+      "Clothing",
+      "Eating Gear",
+      "Personal Gear",
+      "Toiletries"
+    ],
+    "items": [
+      {
+        "id": "clothing-belt",
+        "name": "Belt",
+        "category": "Clothing",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "clothing-closed-toe-shoes",
+        "name": "Closed-toe shoes",
+        "category": "Clothing",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "clothing-extra-layers-as-needed",
+        "name": "Extra layers as needed",
+        "category": "Clothing",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "clothing-hat-or-cap",
+        "name": "Hat or cap",
+        "category": "Clothing",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "clothing-pants-or-shorts",
+        "name": "Pants or shorts",
+        "category": "Clothing",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "clothing-scout-uniform-or-activity-shirt",
+        "name": "Scout uniform or activity shirt",
+        "category": "Clothing",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "clothing-socks",
+        "name": "Socks",
+        "category": "Clothing",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "clothing-underwear",
+        "name": "Underwear",
+        "category": "Clothing",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "clothing-weather-appropriate-shirt",
+        "name": "Weather-appropriate shirt",
+        "category": "Clothing",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "eating-gear-cup",
+        "name": "Cup",
+        "category": "Eating Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "eating-gear-fork-spoon-or-spork",
+        "name": "Fork, spoon, or spork",
+        "category": "Eating Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "eating-gear-mess-kit-or-plate-and-bowl",
+        "name": "Mess kit or plate and bowl",
+        "category": "Eating Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "eating-gear-reusable-napkin-or-bandana",
+        "name": "Reusable napkin or bandana",
+        "category": "Eating Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "eating-gear-water-bottle",
+        "name": "Water bottle",
+        "category": "Eating Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "personal-gear-any-required-medications-managed-according-to-troop-policy",
+        "name": "Any required medications, managed according to troop policy",
+        "category": "Personal Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "personal-gear-bug-spray",
+        "name": "Bug spray",
+        "category": "Personal Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "personal-gear-daypack-or-small-backpack",
+        "name": "Daypack or small backpack",
+        "category": "Personal Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "personal-gear-extra-batteries-or-charging-cable-if-needed",
+        "name": "Extra batteries or charging cable if needed",
+        "category": "Personal Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "personal-gear-flashlight-or-headlamp",
+        "name": "Flashlight or headlamp",
+        "category": "Personal Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "personal-gear-notebook-and-pen-or-pencil",
+        "name": "Notebook and pen or pencil",
+        "category": "Personal Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "personal-gear-personal-first-aid-items",
+        "name": "Personal first-aid items",
+        "category": "Personal Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "personal-gear-pocketknife-if-allowed-and-scout-has-proper-training",
+        "name": "Pocketknife, if allowed and scout has proper training",
+        "category": "Personal Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "personal-gear-scout-handbook-if-needed",
+        "name": "Scout handbook, if needed",
+        "category": "Personal Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "personal-gear-spending-money-if-allowed",
+        "name": "Spending money, if allowed",
+        "category": "Personal Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "personal-gear-sunglasses",
+        "name": "Sunglasses",
+        "category": "Personal Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "personal-gear-sunscreen",
+        "name": "Sunscreen",
+        "category": "Personal Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "personal-gear-water-bottle",
+        "name": "Water bottle",
+        "category": "Personal Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "personal-gear-whistle",
+        "name": "Whistle",
+        "category": "Personal Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "toiletries-comb-or-brush",
+        "name": "Comb or brush",
+        "category": "Toiletries",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "toiletries-deodorant",
+        "name": "Deodorant",
+        "category": "Toiletries",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "toiletries-small-personal-hygiene-bag",
+        "name": "Small personal hygiene bag",
+        "category": "Toiletries",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "toiletries-soap",
+        "name": "Soap",
+        "category": "Toiletries",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "toiletries-toothbrush",
+        "name": "Toothbrush",
+        "category": "Toiletries",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "toiletries-toothpaste",
+        "name": "Toothpaste",
+        "category": "Toiletries",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "toiletries-towel-if-needed",
+        "name": "Towel, if needed",
+        "category": "Toiletries",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "toiletries-washcloth-if-needed",
+        "name": "Washcloth, if needed",
+        "category": "Toiletries",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      }
+    ]
+  },
+  {
+    "id": "day-event-packing-list",
+    "title": "Day Event Packing List",
+    "description": "Prepared packing list imported from scouting_packing_lists.md.",
+    "categories": [
+      "Adult Leader Items",
+      "Applies To",
+      "Scout Personal Items"
+    ],
+    "items": [
+      {
+        "id": "adult-leader-items-directions-or-map",
+        "name": "Directions or map",
+        "category": "Adult Leader Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-leader-items-emergency-contacts",
+        "name": "Emergency contacts",
+        "category": "Adult Leader Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-leader-items-event-schedule",
+        "name": "Event schedule",
+        "category": "Adult Leader Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-leader-items-first-aid-kit",
+        "name": "First-aid kit",
+        "category": "Adult Leader Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-leader-items-medical-forms-if-required-by-policy",
+        "name": "Medical forms, if required by policy",
+        "category": "Adult Leader Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-leader-items-permission-slips",
+        "name": "Permission slips",
+        "category": "Adult Leader Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-leader-items-phone-and-charger",
+        "name": "Phone and charger",
+        "category": "Adult Leader Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-leader-items-roster",
+        "name": "Roster",
+        "category": "Adult Leader Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "applies-to-community-events",
+        "name": "Community events",
+        "category": "Applies To",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "applies-to-courts-of-honor",
+        "name": "Courts of honor",
+        "category": "Applies To",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "applies-to-day-hikes",
+        "name": "Day hikes",
+        "category": "Applies To",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "applies-to-merit-badge-workshops",
+        "name": "Merit badge workshops",
+        "category": "Applies To",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "applies-to-museum-trips",
+        "name": "Museum trips",
+        "category": "Applies To",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "applies-to-parades",
+        "name": "Parades",
+        "category": "Applies To",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "applies-to-service-projects",
+        "name": "Service projects",
+        "category": "Applies To",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "scout-personal-items-bug-spray",
+        "name": "Bug spray",
+        "category": "Scout Personal Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "scout-personal-items-closed-toe-shoes",
+        "name": "Closed-toe shoes",
+        "category": "Scout Personal Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "scout-personal-items-daypack",
+        "name": "Daypack",
+        "category": "Scout Personal Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "scout-personal-items-hat",
+        "name": "Hat",
+        "category": "Scout Personal Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "scout-personal-items-lunch-or-snack-if-not-provided",
+        "name": "Lunch or snack, if not provided",
+        "category": "Scout Personal Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "scout-personal-items-notebook-and-pen-if-needed",
+        "name": "Notebook and pen, if needed",
+        "category": "Scout Personal Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "scout-personal-items-permission-slip-if-required",
+        "name": "Permission slip, if required",
+        "category": "Scout Personal Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "scout-personal-items-rain-jacket-if-outdoors",
+        "name": "Rain jacket, if outdoors",
+        "category": "Scout Personal Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "scout-personal-items-scout-uniform-if-required",
+        "name": "Scout uniform, if required",
+        "category": "Scout Personal Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "scout-personal-items-sunscreen",
+        "name": "Sunscreen",
+        "category": "Scout Personal Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "scout-personal-items-water-bottle",
+        "name": "Water bottle",
+        "category": "Scout Personal Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "scout-personal-items-weather-appropriate-clothing",
+        "name": "Weather-appropriate clothing",
+        "category": "Scout Personal Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      }
+    ]
+  },
+  {
+    "id": "overnight-personal-packing-list",
+    "title": "Overnight Personal Packing List",
+    "description": "Prepared packing list imported from scouting_packing_lists.md.",
+    "categories": [
+      "Clothing",
+      "Optional Comfort Items",
+      "Sleeping Gear",
+      "Toiletries"
+    ],
+    "items": [
+      {
+        "id": "clothing-extra-shoes-or-camp-shoes-if-appropriate",
+        "name": "Extra shoes or camp shoes, if appropriate",
+        "category": "Clothing",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "clothing-laundry-bag-or-plastic-bag-for-dirty-clothes",
+        "name": "Laundry bag or plastic bag for dirty clothes",
+        "category": "Clothing",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "clothing-pants-or-shorts",
+        "name": "Pants or shorts",
+        "category": "Clothing",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "clothing-rain-jacket",
+        "name": "Rain jacket",
+        "category": "Clothing",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "clothing-shirts-based-on-number-of-days",
+        "name": "Shirts based on number of days",
+        "category": "Clothing",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "clothing-sleep-clothes",
+        "name": "Sleep clothes",
+        "category": "Clothing",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "clothing-socks-based-on-number-of-days",
+        "name": "Socks based on number of days",
+        "category": "Clothing",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "clothing-underwear-based-on-number-of-days",
+        "name": "Underwear based on number of days",
+        "category": "Clothing",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "clothing-warm-layer",
+        "name": "Warm layer",
+        "category": "Clothing",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "optional-comfort-items-book",
+        "name": "Book",
+        "category": "Optional Comfort Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "optional-comfort-items-camp-chair",
+        "name": "Camp chair",
+        "category": "Optional Comfort Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "optional-comfort-items-ear-plugs",
+        "name": "Ear plugs",
+        "category": "Optional Comfort Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "optional-comfort-items-small-fan-for-summer-cabin-camping",
+        "name": "Small fan for summer cabin camping",
+        "category": "Optional Comfort Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "optional-comfort-items-small-game-or-cards",
+        "name": "Small game or cards",
+        "category": "Optional Comfort Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "sleeping-gear-pillow",
+        "name": "Pillow",
+        "category": "Sleeping Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "sleeping-gear-sleep-clothes",
+        "name": "Sleep clothes",
+        "category": "Sleeping Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "sleeping-gear-sleeping-bag",
+        "name": "Sleeping bag",
+        "category": "Sleeping Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "sleeping-gear-sleeping-pad-or-air-mattress",
+        "name": "Sleeping pad or air mattress",
+        "category": "Sleeping Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "sleeping-gear-small-flashlight-or-headlamp",
+        "name": "Small flashlight or headlamp",
+        "category": "Sleeping Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "sleeping-gear-stuff-sack-or-bag-for-sleeping-gear",
+        "name": "Stuff sack or bag for sleeping gear",
+        "category": "Sleeping Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "toiletries-comb-or-brush",
+        "name": "Comb or brush",
+        "category": "Toiletries",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "toiletries-deodorant",
+        "name": "Deodorant",
+        "category": "Toiletries",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "toiletries-personal-hygiene-items",
+        "name": "Personal hygiene items",
+        "category": "Toiletries",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "toiletries-soap",
+        "name": "Soap",
+        "category": "Toiletries",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "toiletries-toothbrush",
+        "name": "Toothbrush",
+        "category": "Toiletries",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "toiletries-toothpaste",
+        "name": "Toothpaste",
+        "category": "Toiletries",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "toiletries-towel",
+        "name": "Towel",
+        "category": "Toiletries",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "toiletries-washcloth",
+        "name": "Washcloth",
+        "category": "Toiletries",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      }
+    ]
+  },
+  {
+    "id": "sleeping-type-add-on-lists",
+    "title": "Sleeping Type Add-On Lists",
+    "description": "Prepared packing list imported from scouting_packing_lists.md.",
+    "categories": [
+      "Backpacking Add-Ons",
+      "Cabin Camping Add-Ons",
+      "Hammock Camping Add-Ons",
+      "Indoor Overnight Add-Ons",
+      "Tent Camping Add-Ons"
+    ],
+    "items": [
+      {
+        "id": "backpacking-add-ons-backpacking-pack",
+        "name": "Backpacking pack",
+        "category": "Backpacking Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "backpacking-add-ons-backpacking-stove-if-assigned",
+        "name": "Backpacking stove, if assigned",
+        "category": "Backpacking Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "backpacking-add-ons-bear-bag-or-bear-canister-if-required",
+        "name": "Bear bag or bear canister, if required",
+        "category": "Backpacking Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "backpacking-add-ons-compact-first-aid-kit",
+        "name": "Compact first-aid kit",
+        "category": "Backpacking Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "backpacking-add-ons-lightweight-mess-kit",
+        "name": "Lightweight mess kit",
+        "category": "Backpacking Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "backpacking-add-ons-lightweight-sleeping-bag",
+        "name": "Lightweight sleeping bag",
+        "category": "Backpacking Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "backpacking-add-ons-lightweight-sleeping-pad",
+        "name": "Lightweight sleeping pad",
+        "category": "Backpacking Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "backpacking-add-ons-lightweight-tent-tarp-or-hammock-system",
+        "name": "Lightweight tent, tarp, or hammock system",
+        "category": "Backpacking Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "backpacking-add-ons-pack-cover-or-waterproof-liner",
+        "name": "Pack cover or waterproof liner",
+        "category": "Backpacking Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "backpacking-add-ons-trail-food",
+        "name": "Trail food",
+        "category": "Backpacking Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "backpacking-add-ons-water-filter-or-purifier",
+        "name": "Water filter or purifier",
+        "category": "Backpacking Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "cabin-camping-add-ons-indoor-shoes-or-slippers",
+        "name": "Indoor shoes or slippers",
+        "category": "Cabin Camping Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "cabin-camping-add-ons-pillow",
+        "name": "Pillow",
+        "category": "Cabin Camping Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "cabin-camping-add-ons-shower-shoes-if-showers-are-available",
+        "name": "Shower shoes, if showers are available",
+        "category": "Cabin Camping Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "cabin-camping-add-ons-sleeping-bag-or-bedding",
+        "name": "Sleeping bag or bedding",
+        "category": "Cabin Camping Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "cabin-camping-add-ons-small-bag-for-carrying-toiletries",
+        "name": "Small bag for carrying toiletries",
+        "category": "Cabin Camping Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "cabin-camping-add-ons-towel",
+        "name": "Towel",
+        "category": "Cabin Camping Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hammock-camping-add-ons-bug-net-if-needed",
+        "name": "Bug net, if needed",
+        "category": "Hammock Camping Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hammock-camping-add-ons-carabiners-or-approved-hanging-hardware",
+        "name": "Carabiners or approved hanging hardware",
+        "category": "Hammock Camping Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hammock-camping-add-ons-hammock",
+        "name": "Hammock",
+        "category": "Hammock Camping Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hammock-camping-add-ons-rain-fly",
+        "name": "Rain fly",
+        "category": "Hammock Camping Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hammock-camping-add-ons-tree-straps",
+        "name": "Tree straps",
+        "category": "Hammock Camping Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hammock-camping-add-ons-underquilt-or-sleeping-pad",
+        "name": "Underquilt or sleeping pad",
+        "category": "Hammock Camping Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "indoor-overnight-add-ons-comfortable-clothes",
+        "name": "Comfortable clothes",
+        "category": "Indoor Overnight Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "indoor-overnight-add-ons-pillow",
+        "name": "Pillow",
+        "category": "Indoor Overnight Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "indoor-overnight-add-ons-sleeping-bag",
+        "name": "Sleeping bag",
+        "category": "Indoor Overnight Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "indoor-overnight-add-ons-sleeping-pad-if-sleeping-on-floor",
+        "name": "Sleeping pad, if sleeping on floor",
+        "category": "Indoor Overnight Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "indoor-overnight-add-ons-small-bag-for-personal-items",
+        "name": "Small bag for personal items",
+        "category": "Indoor Overnight Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "indoor-overnight-add-ons-toothbrush-and-toiletries",
+        "name": "Toothbrush and toiletries",
+        "category": "Indoor Overnight Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "tent-camping-add-ons-dry-bag-or-plastic-bag-for-keeping-clothes-dry",
+        "name": "Dry bag or plastic bag for keeping clothes dry",
+        "category": "Tent Camping Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "tent-camping-add-ons-ground-cloth-or-footprint",
+        "name": "Ground cloth or footprint",
+        "category": "Tent Camping Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "tent-camping-add-ons-sleeping-bag-rated-for-expected-temperature",
+        "name": "Sleeping bag rated for expected temperature",
+        "category": "Tent Camping Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "tent-camping-add-ons-sleeping-pad",
+        "name": "Sleeping pad",
+        "category": "Tent Camping Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "tent-camping-add-ons-small-broom-or-towel-for-tent-cleanup",
+        "name": "Small broom or towel for tent cleanup",
+        "category": "Tent Camping Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "tent-camping-add-ons-tent-or-assigned-tent-space",
+        "name": "Tent or assigned tent space",
+        "category": "Tent Camping Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "tent-camping-add-ons-tent-stakes",
+        "name": "Tent stakes",
+        "category": "Tent Camping Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      }
+    ]
+  },
+  {
+    "id": "seasonal-and-weather-add-on-lists",
+    "title": "Seasonal and Weather Add-On Lists",
+    "description": "Prepared packing list imported from scouting_packing_lists.md.",
+    "categories": [
+      "Cold Weather Add-Ons",
+      "Hot Weather Add-Ons",
+      "Rainy Weather Add-Ons",
+      "Snow Add-Ons",
+      "Warm Weather / Summer Add-Ons"
+    ],
+    "items": [
+      {
+        "id": "cold-weather-add-ons-extra-blanket-if-appropriate",
+        "name": "Extra blanket, if appropriate",
+        "category": "Cold Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "cold-weather-add-ons-extra-dry-socks",
+        "name": "Extra dry socks",
+        "category": "Cold Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "cold-weather-add-ons-fleece-or-insulating-layer",
+        "name": "Fleece or insulating layer",
+        "category": "Cold Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "cold-weather-add-ons-gloves-or-mittens",
+        "name": "Gloves or mittens",
+        "category": "Cold Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "cold-weather-add-ons-hand-warmers",
+        "name": "Hand warmers",
+        "category": "Cold Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "cold-weather-add-ons-sleeping-bag-rated-for-cold-weather",
+        "name": "Sleeping bag rated for cold weather",
+        "category": "Cold Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "cold-weather-add-ons-thermal-base-layer",
+        "name": "Thermal base layer",
+        "category": "Cold Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "cold-weather-add-ons-warm-jacket",
+        "name": "Warm jacket",
+        "category": "Cold Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "cold-weather-add-ons-winter-hat",
+        "name": "Winter hat",
+        "category": "Cold Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "cold-weather-add-ons-wool-or-synthetic-socks",
+        "name": "Wool or synthetic socks",
+        "category": "Cold Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hot-weather-add-ons-cooling-towel",
+        "name": "Cooling towel",
+        "category": "Hot Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hot-weather-add-ons-electrolyte-packets-if-allowed",
+        "name": "Electrolyte packets, if allowed",
+        "category": "Hot Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hot-weather-add-ons-extra-water",
+        "name": "Extra water",
+        "category": "Hot Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hot-weather-add-ons-lightweight-long-sleeve-shirt",
+        "name": "Lightweight long-sleeve shirt",
+        "category": "Hot Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hot-weather-add-ons-shade-tarp-for-patrol-or-troop-use",
+        "name": "Shade tarp for patrol or troop use",
+        "category": "Hot Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hot-weather-add-ons-sun-hat",
+        "name": "Sun hat",
+        "category": "Hot Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hot-weather-add-ons-sunscreen",
+        "name": "Sunscreen",
+        "category": "Hot Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "rainy-weather-add-ons-extra-shoes-if-possible",
+        "name": "Extra shoes, if possible",
+        "category": "Rainy Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "rainy-weather-add-ons-extra-socks",
+        "name": "Extra socks",
+        "category": "Rainy Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "rainy-weather-add-ons-pack-cover",
+        "name": "Pack cover",
+        "category": "Rainy Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "rainy-weather-add-ons-plastic-bag-for-wet-clothes",
+        "name": "Plastic bag for wet clothes",
+        "category": "Rainy Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "rainy-weather-add-ons-rain-jacket",
+        "name": "Rain jacket",
+        "category": "Rainy Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "rainy-weather-add-ons-rain-pants",
+        "name": "Rain pants",
+        "category": "Rainy Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": false,
+        "scope": "per-person"
+      },
+      {
+        "id": "rainy-weather-add-ons-tarp-or-patrol-dining-fly",
+        "name": "Tarp or patrol dining fly",
+        "category": "Rainy Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "rainy-weather-add-ons-waterproof-bag-or-dry-bag",
+        "name": "Waterproof bag or dry bag",
+        "category": "Rainy Weather Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "snow-add-ons-extra-dry-clothes",
+        "name": "Extra dry clothes",
+        "category": "Snow Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "snow-add-ons-gloves-plus-backup-gloves",
+        "name": "Gloves plus backup gloves",
+        "category": "Snow Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "snow-add-ons-hand-warmers",
+        "name": "Hand warmers",
+        "category": "Snow Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "snow-add-ons-insulated-boots",
+        "name": "Insulated boots",
+        "category": "Snow Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "snow-add-ons-snow-pants-or-waterproof-pants",
+        "name": "Snow pants or waterproof pants",
+        "category": "Snow Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "snow-add-ons-sunglasses-or-eye-protection",
+        "name": "Sunglasses or eye protection",
+        "category": "Snow Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "snow-add-ons-thermal-base-layer",
+        "name": "Thermal base layer",
+        "category": "Snow Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "snow-add-ons-warm-jacket",
+        "name": "Warm jacket",
+        "category": "Snow Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "snow-add-ons-winter-hat",
+        "name": "Winter hat",
+        "category": "Snow Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "snow-add-ons-wool-socks",
+        "name": "Wool socks",
+        "category": "Snow Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "warm-weather-summer-add-ons-bug-spray",
+        "name": "Bug spray",
+        "category": "Warm Weather / Summer Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "warm-weather-summer-add-ons-cooling-towel",
+        "name": "Cooling towel",
+        "category": "Warm Weather / Summer Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": false,
+        "scope": "per-person"
+      },
+      {
+        "id": "warm-weather-summer-add-ons-extra-water-bottle",
+        "name": "Extra water bottle",
+        "category": "Warm Weather / Summer Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "warm-weather-summer-add-ons-lightweight-clothing",
+        "name": "Lightweight clothing",
+        "category": "Warm Weather / Summer Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "warm-weather-summer-add-ons-sandals-or-water-shoes-if-allowed",
+        "name": "Sandals or water shoes, if allowed",
+        "category": "Warm Weather / Summer Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "warm-weather-summer-add-ons-sun-hat",
+        "name": "Sun hat",
+        "category": "Warm Weather / Summer Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "warm-weather-summer-add-ons-sunscreen",
+        "name": "Sunscreen",
+        "category": "Warm Weather / Summer Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "warm-weather-summer-add-ons-swimsuit-if-water-activities-are-planned",
+        "name": "Swimsuit, if water activities are planned",
+        "category": "Warm Weather / Summer Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "warm-weather-summer-add-ons-towel",
+        "name": "Towel",
+        "category": "Warm Weather / Summer Add-Ons",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      }
+    ]
+  },
+  {
+    "id": "activity-specific-packing-lists",
+    "title": "Activity-Specific Packing Lists",
+    "description": "Prepared packing list imported from scouting_packing_lists.md.",
+    "categories": [
+      "Biking Packing List",
+      "Canoeing / Kayaking Packing List",
+      "Climbing Packing List",
+      "Court of Honor Packing List",
+      "Hiking Packing List",
+      "Parade Packing List",
+      "Service Project Packing List",
+      "Swimming Packing List"
+    ],
+    "items": [
+      {
+        "id": "biking-packing-list-basic-bike-tool",
+        "name": "Basic bike tool",
+        "category": "Biking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "biking-packing-list-bike",
+        "name": "Bike",
+        "category": "Biking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "biking-packing-list-bike-lock-if-needed",
+        "name": "Bike lock, if needed",
+        "category": "Biking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "biking-packing-list-gloves",
+        "name": "Gloves",
+        "category": "Biking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": false,
+        "scope": "per-person"
+      },
+      {
+        "id": "biking-packing-list-helmet",
+        "name": "Helmet",
+        "category": "Biking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "biking-packing-list-patch-kit",
+        "name": "Patch kit",
+        "category": "Biking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "biking-packing-list-reflective-clothing-or-lights-if-needed",
+        "name": "Reflective clothing or lights, if needed",
+        "category": "Biking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "biking-packing-list-spare-tube",
+        "name": "Spare tube",
+        "category": "Biking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "biking-packing-list-tire-pump",
+        "name": "Tire pump",
+        "category": "Biking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "biking-packing-list-water-bottle",
+        "name": "Water bottle",
+        "category": "Biking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "canoeing-kayaking-packing-list-change-of-dry-clothes",
+        "name": "Change of dry clothes",
+        "category": "Canoeing / Kayaking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "canoeing-kayaking-packing-list-dry-bag",
+        "name": "Dry bag",
+        "category": "Canoeing / Kayaking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "canoeing-kayaking-packing-list-hat-with-strap",
+        "name": "Hat with strap",
+        "category": "Canoeing / Kayaking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "canoeing-kayaking-packing-list-personal-flotation-device-if-not-provided",
+        "name": "Personal flotation device, if not provided",
+        "category": "Canoeing / Kayaking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "canoeing-kayaking-packing-list-plastic-bag-for-wet-items",
+        "name": "Plastic bag for wet items",
+        "category": "Canoeing / Kayaking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "canoeing-kayaking-packing-list-sunscreen",
+        "name": "Sunscreen",
+        "category": "Canoeing / Kayaking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "canoeing-kayaking-packing-list-swimsuit-or-quick-dry-clothing",
+        "name": "Swimsuit or quick-dry clothing",
+        "category": "Canoeing / Kayaking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "canoeing-kayaking-packing-list-towel",
+        "name": "Towel",
+        "category": "Canoeing / Kayaking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "canoeing-kayaking-packing-list-water-bottle",
+        "name": "Water bottle",
+        "category": "Canoeing / Kayaking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "canoeing-kayaking-packing-list-water-shoes",
+        "name": "Water shoes",
+        "category": "Canoeing / Kayaking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "climbing-packing-list-climbing-gear-if-not-provided-by-facility",
+        "name": "Climbing gear, if not provided by facility",
+        "category": "Climbing Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "climbing-packing-list-closed-toe-shoes",
+        "name": "Closed-toe shoes",
+        "category": "Climbing Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "climbing-packing-list-comfortable-athletic-clothing",
+        "name": "Comfortable athletic clothing",
+        "category": "Climbing Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "climbing-packing-list-hair-tie-for-long-hair",
+        "name": "Hair tie for long hair",
+        "category": "Climbing Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "climbing-packing-list-permission-form-if-required",
+        "name": "Permission form, if required",
+        "category": "Climbing Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "climbing-packing-list-snack",
+        "name": "Snack",
+        "category": "Climbing Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "climbing-packing-list-water-bottle",
+        "name": "Water bottle",
+        "category": "Climbing Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "court-of-honor-packing-list-awards-or-recognition-items-if-assigned",
+        "name": "Awards or recognition items, if assigned",
+        "category": "Court of Honor Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "court-of-honor-packing-list-camera",
+        "name": "Camera",
+        "category": "Court of Honor Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": false,
+        "scope": "per-person"
+      },
+      {
+        "id": "court-of-honor-packing-list-flags-if-assigned",
+        "name": "Flags, if assigned",
+        "category": "Court of Honor Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "court-of-honor-packing-list-full-scout-uniform",
+        "name": "Full scout uniform",
+        "category": "Court of Honor Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "court-of-honor-packing-list-merit-badge-sash",
+        "name": "Merit badge sash",
+        "category": "Court of Honor Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "court-of-honor-packing-list-printed-program-if-assigned",
+        "name": "Printed program, if assigned",
+        "category": "Court of Honor Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hiking-packing-list-bug-spray",
+        "name": "Bug spray",
+        "category": "Hiking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hiking-packing-list-compass",
+        "name": "Compass",
+        "category": "Hiking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hiking-packing-list-daypack",
+        "name": "Daypack",
+        "category": "Hiking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hiking-packing-list-first-aid-items",
+        "name": "First-aid items",
+        "category": "Hiking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hiking-packing-list-hat",
+        "name": "Hat",
+        "category": "Hiking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hiking-packing-list-hiking-boots-or-sturdy-shoes",
+        "name": "Hiking boots or sturdy shoes",
+        "category": "Hiking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hiking-packing-list-lunch-if-needed",
+        "name": "Lunch, if needed",
+        "category": "Hiking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hiking-packing-list-map",
+        "name": "Map",
+        "category": "Hiking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hiking-packing-list-rain-jacket",
+        "name": "Rain jacket",
+        "category": "Hiking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hiking-packing-list-sunscreen",
+        "name": "Sunscreen",
+        "category": "Hiking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hiking-packing-list-trail-snacks",
+        "name": "Trail snacks",
+        "category": "Hiking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hiking-packing-list-trekking-poles",
+        "name": "Trekking poles",
+        "category": "Hiking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": false,
+        "scope": "per-person"
+      },
+      {
+        "id": "hiking-packing-list-water-bottle-or-hydration-pack",
+        "name": "Water bottle or hydration pack",
+        "category": "Hiking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "hiking-packing-list-whistle",
+        "name": "Whistle",
+        "category": "Hiking Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "parade-packing-list-comfortable-walking-shoes",
+        "name": "Comfortable walking shoes",
+        "category": "Parade Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "parade-packing-list-full-scout-uniform",
+        "name": "Full scout uniform",
+        "category": "Parade Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "parade-packing-list-gloves-if-carrying-flags",
+        "name": "Gloves, if carrying flags",
+        "category": "Parade Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "parade-packing-list-hat",
+        "name": "Hat",
+        "category": "Parade Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "parade-packing-list-rain-gear-if-needed",
+        "name": "Rain gear, if needed",
+        "category": "Parade Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "parade-packing-list-sunscreen",
+        "name": "Sunscreen",
+        "category": "Parade Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "parade-packing-list-water-bottle",
+        "name": "Water bottle",
+        "category": "Parade Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "service-project-packing-list-closed-toe-shoes-or-boots",
+        "name": "Closed-toe shoes or boots",
+        "category": "Service Project Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "service-project-packing-list-hat",
+        "name": "Hat",
+        "category": "Service Project Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "service-project-packing-list-long-pants-if-working-around-brush-or-tools",
+        "name": "Long pants, if working around brush or tools",
+        "category": "Service Project Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "service-project-packing-list-lunch-or-snack-if-needed",
+        "name": "Lunch or snack, if needed",
+        "category": "Service Project Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "service-project-packing-list-safety-glasses-if-needed",
+        "name": "Safety glasses, if needed",
+        "category": "Service Project Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "service-project-packing-list-sunscreen",
+        "name": "Sunscreen",
+        "category": "Service Project Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "service-project-packing-list-tool-assigned-by-project-leader",
+        "name": "Tool assigned by project leader",
+        "category": "Service Project Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "service-project-packing-list-trash-bags-if-assigned",
+        "name": "Trash bags, if assigned",
+        "category": "Service Project Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "service-project-packing-list-water-bottle",
+        "name": "Water bottle",
+        "category": "Service Project Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "service-project-packing-list-work-gloves",
+        "name": "Work gloves",
+        "category": "Service Project Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "swimming-packing-list-dry-clothes",
+        "name": "Dry clothes",
+        "category": "Swimming Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "swimming-packing-list-goggles",
+        "name": "Goggles",
+        "category": "Swimming Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": false,
+        "scope": "per-person"
+      },
+      {
+        "id": "swimming-packing-list-plastic-bag-for-wet-clothes",
+        "name": "Plastic bag for wet clothes",
+        "category": "Swimming Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "swimming-packing-list-sunscreen",
+        "name": "Sunscreen",
+        "category": "Swimming Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "swimming-packing-list-swimsuit",
+        "name": "Swimsuit",
+        "category": "Swimming Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "swimming-packing-list-towel",
+        "name": "Towel",
+        "category": "Swimming Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "swimming-packing-list-water-shoes-or-sandals-if-allowed",
+        "name": "Water shoes or sandals, if allowed",
+        "category": "Swimming Packing List",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      }
+    ]
+  },
+  {
+    "id": "patrol-gear-packing-list",
+    "title": "Patrol Gear Packing List",
+    "description": "Prepared packing list imported from scouting_packing_lists.md.",
+    "categories": [
+      "Patrol Cleaning Gear",
+      "Patrol Cooking Gear",
+      "Patrol Food Storage",
+      "Patrol Shelter and Camp Setup"
+    ],
+    "items": [
+      {
+        "id": "patrol-cleaning-gear-biodegradable-dish-soap",
+        "name": "Biodegradable dish soap",
+        "category": "Patrol Cleaning Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-cleaning-gear-dish-tubs",
+        "name": "Dish tubs",
+        "category": "Patrol Cleaning Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-cleaning-gear-drying-towel",
+        "name": "Drying towel",
+        "category": "Patrol Cleaning Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-cleaning-gear-food-waste-bag",
+        "name": "Food waste bag",
+        "category": "Patrol Cleaning Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-cleaning-gear-sanitizing-tablets-or-bleach-solution-according-to-troop-policy",
+        "name": "Sanitizing tablets or bleach solution, according to troop policy",
+        "category": "Patrol Cleaning Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-cleaning-gear-sponge-or-scrubber",
+        "name": "Sponge or scrubber",
+        "category": "Patrol Cleaning Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-cleaning-gear-trash-bags",
+        "name": "Trash bags",
+        "category": "Patrol Cleaning Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-cooking-gear-aluminum-foil",
+        "name": "Aluminum foil",
+        "category": "Patrol Cooking Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-cooking-gear-can-opener",
+        "name": "Can opener",
+        "category": "Patrol Cooking Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-cooking-gear-cooking-pot",
+        "name": "Cooking pot",
+        "category": "Patrol Cooking Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-cooking-gear-cooking-spoon",
+        "name": "Cooking spoon",
+        "category": "Patrol Cooking Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-cooking-gear-frying-pan",
+        "name": "Frying pan",
+        "category": "Patrol Cooking Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-cooking-gear-fuel",
+        "name": "Fuel",
+        "category": "Patrol Cooking Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-cooking-gear-knife-and-cutting-board",
+        "name": "Knife and cutting board",
+        "category": "Patrol Cooking Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-cooking-gear-matches-or-lighter-managed-safely",
+        "name": "Matches or lighter, managed safely",
+        "category": "Patrol Cooking Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-cooking-gear-measuring-cup-or-spoons",
+        "name": "Measuring cup or spoons",
+        "category": "Patrol Cooking Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-cooking-gear-paper-towels",
+        "name": "Paper towels",
+        "category": "Patrol Cooking Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-cooking-gear-spatula",
+        "name": "Spatula",
+        "category": "Patrol Cooking Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-cooking-gear-stove",
+        "name": "Stove",
+        "category": "Patrol Cooking Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-cooking-gear-trash-bags",
+        "name": "Trash bags",
+        "category": "Patrol Cooking Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-food-storage-bear-bag-bear-box-or-bear-canister-if-required",
+        "name": "Bear bag, bear box, or bear canister if required",
+        "category": "Patrol Food Storage",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-food-storage-cooler",
+        "name": "Cooler",
+        "category": "Patrol Food Storage",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-food-storage-dry-food-box",
+        "name": "Dry food box",
+        "category": "Patrol Food Storage",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-food-storage-ice",
+        "name": "Ice",
+        "category": "Patrol Food Storage",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-food-storage-labels-for-patrol-food",
+        "name": "Labels for patrol food",
+        "category": "Patrol Food Storage",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-shelter-and-camp-setup-dining-fly-or-tarp",
+        "name": "Dining fly or tarp",
+        "category": "Patrol Shelter and Camp Setup",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-shelter-and-camp-setup-fire-bucket-if-required",
+        "name": "Fire bucket, if required",
+        "category": "Patrol Shelter and Camp Setup",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-shelter-and-camp-setup-lantern",
+        "name": "Lantern",
+        "category": "Patrol Shelter and Camp Setup",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-shelter-and-camp-setup-patrol-table-if-used",
+        "name": "Patrol table, if used",
+        "category": "Patrol Shelter and Camp Setup",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-shelter-and-camp-setup-poles-or-rope",
+        "name": "Poles or rope",
+        "category": "Patrol Shelter and Camp Setup",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-shelter-and-camp-setup-stakes",
+        "name": "Stakes",
+        "category": "Patrol Shelter and Camp Setup",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-shelter-and-camp-setup-water-jug",
+        "name": "Water jug",
+        "category": "Patrol Shelter and Camp Setup",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      }
+    ]
+  },
+  {
+    "id": "troop-gear-packing-list",
+    "title": "Troop Gear Packing List",
+    "description": "Prepared packing list imported from scouting_packing_lists.md.",
+    "categories": [
+      "Troop Administrative Gear",
+      "Troop General Gear",
+      "Troop Safety Gear"
+    ],
+    "items": [
+      {
+        "id": "troop-administrative-gear-campsite-reservation",
+        "name": "Campsite reservation",
+        "category": "Troop Administrative Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-administrative-gear-copies-of-activity-plan",
+        "name": "Copies of activity plan",
+        "category": "Troop Administrative Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-administrative-gear-directions",
+        "name": "Directions",
+        "category": "Troop Administrative Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-administrative-gear-driver-list",
+        "name": "Driver list",
+        "category": "Troop Administrative Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-administrative-gear-emergency-contacts",
+        "name": "Emergency contacts",
+        "category": "Troop Administrative Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-administrative-gear-event-roster",
+        "name": "Event roster",
+        "category": "Troop Administrative Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-administrative-gear-medical-forms",
+        "name": "Medical forms",
+        "category": "Troop Administrative Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-administrative-gear-payment-records-if-needed",
+        "name": "Payment records, if needed",
+        "category": "Troop Administrative Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-administrative-gear-permission-slips",
+        "name": "Permission slips",
+        "category": "Troop Administrative Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-administrative-gear-printed-schedule",
+        "name": "Printed schedule",
+        "category": "Troop Administrative Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-general-gear-advancement-or-program-supplies",
+        "name": "Advancement or program supplies",
+        "category": "Troop General Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-general-gear-duct-tape",
+        "name": "Duct tape",
+        "category": "Troop General Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-general-gear-extra-tarps",
+        "name": "Extra tarps",
+        "category": "Troop General Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-general-gear-extra-tent-stakes",
+        "name": "Extra tent stakes",
+        "category": "Troop General Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-general-gear-extra-water-jugs",
+        "name": "Extra water jugs",
+        "category": "Troop General Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-general-gear-flags",
+        "name": "Flags",
+        "category": "Troop General Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-general-gear-lanterns",
+        "name": "Lanterns",
+        "category": "Troop General Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-general-gear-lost-and-found-bag",
+        "name": "Lost-and-found bag",
+        "category": "Troop General Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-general-gear-repair-kit",
+        "name": "Repair kit",
+        "category": "Troop General Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-general-gear-rope-or-paracord",
+        "name": "Rope or paracord",
+        "category": "Troop General Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-general-gear-troop-first-aid-kit",
+        "name": "Troop first-aid kit",
+        "category": "Troop General Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-safety-gear-backup-flashlight",
+        "name": "Backup flashlight",
+        "category": "Troop Safety Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-safety-gear-emergency-blanket",
+        "name": "Emergency blanket",
+        "category": "Troop Safety Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-safety-gear-emergency-contact-list",
+        "name": "Emergency contact list",
+        "category": "Troop Safety Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-safety-gear-fire-extinguisher-if-appropriate",
+        "name": "Fire extinguisher, if appropriate",
+        "category": "Troop Safety Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-safety-gear-incident-report-forms",
+        "name": "Incident report forms",
+        "category": "Troop Safety Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-safety-gear-main-first-aid-kit",
+        "name": "Main first-aid kit",
+        "category": "Troop Safety Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-safety-gear-map-of-event-area",
+        "name": "Map of event area",
+        "category": "Troop Safety Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-safety-gear-medical-forms-according-to-policy",
+        "name": "Medical forms, according to policy",
+        "category": "Troop Safety Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      },
+      {
+        "id": "troop-safety-gear-weather-radio-or-weather-app-access",
+        "name": "Weather radio or weather app access",
+        "category": "Troop Safety Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-troop"
+      }
+    ]
+  },
+  {
+    "id": "adult-leader-packing-list",
+    "title": "Adult Leader Packing List",
+    "description": "Prepared packing list imported from scouting_packing_lists.md.",
+    "categories": [
+      "Adult Leader Admin Gear",
+      "Adult Leader Safety Gear",
+      "Adult Personal Gear"
+    ],
+    "items": [
+      {
+        "id": "adult-leader-admin-gear-campsite-reservation",
+        "name": "Campsite reservation",
+        "category": "Adult Leader Admin Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-leader-admin-gear-directions",
+        "name": "Directions",
+        "category": "Adult Leader Admin Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-leader-admin-gear-emergency-contact-list",
+        "name": "Emergency contact list",
+        "category": "Adult Leader Admin Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-leader-admin-gear-event-schedule",
+        "name": "Event schedule",
+        "category": "Adult Leader Admin Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-leader-admin-gear-incident-forms",
+        "name": "Incident forms",
+        "category": "Adult Leader Admin Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-leader-admin-gear-medical-forms",
+        "name": "Medical forms",
+        "category": "Adult Leader Admin Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-leader-admin-gear-parent-contact-list",
+        "name": "Parent contact list",
+        "category": "Adult Leader Admin Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-leader-admin-gear-payment-or-receipt-records-if-needed",
+        "name": "Payment or receipt records, if needed",
+        "category": "Adult Leader Admin Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-leader-admin-gear-permission-slips",
+        "name": "Permission slips",
+        "category": "Adult Leader Admin Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-leader-admin-gear-roster",
+        "name": "Roster",
+        "category": "Adult Leader Admin Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-leader-safety-gear-battery-pack",
+        "name": "Battery pack",
+        "category": "Adult Leader Safety Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-leader-safety-gear-emergency-plan",
+        "name": "Emergency plan",
+        "category": "Adult Leader Safety Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-leader-safety-gear-first-aid-kit",
+        "name": "First-aid kit",
+        "category": "Adult Leader Safety Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-leader-safety-gear-medication-log-if-used-by-troop",
+        "name": "Medication log, if used by troop",
+        "category": "Adult Leader Safety Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-leader-safety-gear-phone-and-charger",
+        "name": "Phone and charger",
+        "category": "Adult Leader Safety Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-leader-safety-gear-vehicle-keys-secured",
+        "name": "Vehicle keys secured",
+        "category": "Adult Leader Safety Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-leader-safety-gear-weather-alerts",
+        "name": "Weather alerts",
+        "category": "Adult Leader Safety Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-personal-gear-camp-chair",
+        "name": "Camp chair",
+        "category": "Adult Personal Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-personal-gear-clothing-based-on-number-of-days",
+        "name": "Clothing based on number of days",
+        "category": "Adult Personal Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-personal-gear-flashlight-or-headlamp",
+        "name": "Flashlight or headlamp",
+        "category": "Adult Personal Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-personal-gear-personal-medications",
+        "name": "Personal medications",
+        "category": "Adult Personal Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-personal-gear-sleeping-gear",
+        "name": "Sleeping gear",
+        "category": "Adult Personal Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-personal-gear-toiletries",
+        "name": "Toiletries",
+        "category": "Adult Personal Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-personal-gear-water-bottle",
+        "name": "Water bottle",
+        "category": "Adult Personal Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "adult-personal-gear-weather-gear",
+        "name": "Weather gear",
+        "category": "Adult Personal Gear",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      }
+    ]
+  },
+  {
+    "id": "food-and-meal-packing-lists",
+    "title": "Food and Meal Packing Lists",
+    "description": "Prepared packing list imported from scouting_packing_lists.md.",
+    "categories": [
+      "Grubmaster Checklist",
+      "Patrol Meal Planning Items"
+    ],
+    "items": [
+      {
+        "id": "grubmaster-checklist-bring-receipts-if-reimbursement-is-needed",
+        "name": "Bring receipts if reimbursement is needed",
+        "category": "Grubmaster Checklist",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "grubmaster-checklist-buy-food-within-budget",
+        "name": "Buy food within budget",
+        "category": "Grubmaster Checklist",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "grubmaster-checklist-confirm-allergies-and-food-restrictions",
+        "name": "Confirm allergies and food restrictions",
+        "category": "Grubmaster Checklist",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "grubmaster-checklist-confirm-number-of-scouts-and-adults-eating",
+        "name": "Confirm number of scouts and adults eating",
+        "category": "Grubmaster Checklist",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "grubmaster-checklist-label-food-by-patrol-and-meal",
+        "name": "Label food by patrol and meal",
+        "category": "Grubmaster Checklist",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "grubmaster-checklist-pack-food-by-meal",
+        "name": "Pack food by meal",
+        "category": "Grubmaster Checklist",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "grubmaster-checklist-plan-meals-based-on-cooking-equipment-available",
+        "name": "Plan meals based on cooking equipment available",
+        "category": "Grubmaster Checklist",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "patrol-meal-planning-items-condiments",
+        "name": "Condiments",
+        "category": "Patrol Meal Planning Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-meal-planning-items-cooking-oil",
+        "name": "Cooking oil",
+        "category": "Patrol Meal Planning Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-meal-planning-items-cooler-food",
+        "name": "Cooler food",
+        "category": "Patrol Meal Planning Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-meal-planning-items-drink-mix-if-allowed",
+        "name": "Drink mix, if allowed",
+        "category": "Patrol Meal Planning Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-meal-planning-items-dry-food",
+        "name": "Dry food",
+        "category": "Patrol Meal Planning Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-meal-planning-items-food-labels",
+        "name": "Food labels",
+        "category": "Patrol Meal Planning Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-meal-planning-items-hot-chocolate-coffee-or-tea-if-appropriate",
+        "name": "Hot chocolate, coffee, or tea, if appropriate",
+        "category": "Patrol Meal Planning Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-meal-planning-items-ice",
+        "name": "Ice",
+        "category": "Patrol Meal Planning Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-meal-planning-items-meal-plan",
+        "name": "Meal plan",
+        "category": "Patrol Meal Planning Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-meal-planning-items-shopping-list",
+        "name": "Shopping list",
+        "category": "Patrol Meal Planning Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-meal-planning-items-snacks",
+        "name": "Snacks",
+        "category": "Patrol Meal Planning Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-meal-planning-items-spices",
+        "name": "Spices",
+        "category": "Patrol Meal Planning Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      },
+      {
+        "id": "patrol-meal-planning-items-trash-bags",
+        "name": "Trash bags",
+        "category": "Patrol Meal Planning Items",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-patrol"
+      }
+    ]
+  },
+  {
+    "id": "event-organizer-packing-list",
+    "title": "Event Organizer Packing List",
+    "description": "Prepared packing list imported from scouting_packing_lists.md.",
+    "categories": [
+      "Cleanup and Closeout",
+      "Communication",
+      "Documents",
+      "Program Supplies"
+    ],
+    "items": [
+      {
+        "id": "cleanup-and-closeout-final-campsite-inspection-checklist",
+        "name": "Final campsite inspection checklist",
+        "category": "Cleanup and Closeout",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "cleanup-and-closeout-lost-and-found-container",
+        "name": "Lost-and-found container",
+        "category": "Cleanup and Closeout",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "cleanup-and-closeout-photos-or-attendance-record-if-needed",
+        "name": "Photos or attendance record, if needed",
+        "category": "Cleanup and Closeout",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "cleanup-and-closeout-recycling-bags",
+        "name": "Recycling bags",
+        "category": "Cleanup and Closeout",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "cleanup-and-closeout-reimbursement-forms-if-needed",
+        "name": "Reimbursement forms, if needed",
+        "category": "Cleanup and Closeout",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "cleanup-and-closeout-trash-bags",
+        "name": "Trash bags",
+        "category": "Cleanup and Closeout",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "communication-battery-pack",
+        "name": "Battery pack",
+        "category": "Communication",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "communication-charger",
+        "name": "Charger",
+        "category": "Communication",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "communication-contact-list",
+        "name": "Contact list",
+        "category": "Communication",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "communication-parent-communication-plan",
+        "name": "Parent communication plan",
+        "category": "Communication",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "communication-phone",
+        "name": "Phone",
+        "category": "Communication",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "communication-two-way-radios-if-used",
+        "name": "Two-way radios, if used",
+        "category": "Communication",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "documents-activity-rules",
+        "name": "Activity rules",
+        "category": "Documents",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "documents-campsite-or-facility-reservation",
+        "name": "Campsite or facility reservation",
+        "category": "Documents",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "documents-check-in-sheet",
+        "name": "Check-in sheet",
+        "category": "Documents",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "documents-emergency-contacts",
+        "name": "Emergency contacts",
+        "category": "Documents",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "documents-event-plan",
+        "name": "Event plan",
+        "category": "Documents",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "documents-maps-and-directions",
+        "name": "Maps and directions",
+        "category": "Documents",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "documents-medical-forms",
+        "name": "Medical forms",
+        "category": "Documents",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "documents-permission-slips",
+        "name": "Permission slips",
+        "category": "Documents",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "documents-roster",
+        "name": "Roster",
+        "category": "Documents",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "documents-schedule",
+        "name": "Schedule",
+        "category": "Documents",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "program-supplies-activity-materials",
+        "name": "Activity materials",
+        "category": "Program Supplies",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "program-supplies-awards",
+        "name": "Awards",
+        "category": "Program Supplies",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "program-supplies-flags",
+        "name": "Flags",
+        "category": "Program Supplies",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "program-supplies-name-tags",
+        "name": "Name tags",
+        "category": "Program Supplies",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "program-supplies-pens-and-markers",
+        "name": "Pens and markers",
+        "category": "Program Supplies",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "program-supplies-printed-instructions",
+        "name": "Printed instructions",
+        "category": "Program Supplies",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "program-supplies-score-sheets",
+        "name": "Score sheets",
+        "category": "Program Supplies",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      },
+      {
+        "id": "program-supplies-signs",
+        "name": "Signs",
+        "category": "Program Supplies",
+        "quantity": "",
+        "notes": "",
+        "required": true,
+        "scope": "per-person"
+      }
+    ]
+  }
+]

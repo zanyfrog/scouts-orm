@@ -167,6 +167,78 @@ async function loadHolidays() {
   return readThroughCache(cacheKey(["holidays"]), () => orm.getHolidays());
 }
 
+async function loadPackingLists() {
+  return readThroughCache(cacheKey(["packing-lists"]), () => orm.getPackingLists());
+}
+
+function normalizeTextKey(value) {
+  return String(value || "").trim().toLowerCase().replace(/\s+/g, " ");
+}
+
+function quantityRank(value) {
+  const text = String(value || "").trim();
+  const match = text.match(/\d+(?:\.\d+)?/);
+  return match ? Number(match[0]) : (text ? 1 : 0);
+}
+
+function mergePackingItem(existing, incoming) {
+  const next = { ...existing };
+  if (quantityRank(incoming.quantity) > quantityRank(next.quantity)) {
+    next.quantity = incoming.quantity;
+  }
+  next.required = Boolean(next.required || incoming.required);
+  const notes = [next.notes, incoming.notes].map((note) => String(note || "").trim()).filter(Boolean);
+  next.notes = [...new Set(notes)].join(" ");
+  if (next.scope !== incoming.scope && incoming.scope) {
+    const scopeOrder = ["per-person", "per-patrol", "per-troop", "optional"];
+    const currentIndex = scopeOrder.indexOf(next.scope);
+    const incomingIndex = scopeOrder.indexOf(incoming.scope);
+    if (incomingIndex > currentIndex) next.scope = incoming.scope;
+  }
+  return next;
+}
+
+function normalizePackingItemForCollation(item = {}) {
+  return {
+    id: String(item.id || "").trim(),
+    name: String(item.name || "").trim(),
+    category: String(item.category || "General").trim() || "General",
+    quantity: String(item.quantity || "").trim(),
+    notes: String(item.notes || "").trim(),
+    required: item.required === false ? false : true,
+    scope: String(item.scope || "per-person").trim() || "per-person",
+  };
+}
+
+async function collateEventPackingList(event) {
+  const selectedIds = new Set((Array.isArray(event?.packingListIds) ? event.packingListIds : []).map((id) => String(id || "").trim()).filter(Boolean));
+  const packingLists = await loadPackingLists();
+  const selectedLists = packingLists.filter((list) => selectedIds.has(String(list.id)));
+  const itemsByKey = new Map();
+  [...selectedLists.flatMap((list) => list.items || []), ...(Array.isArray(event?.packingItems) ? event.packingItems : [])]
+    .map(normalizePackingItemForCollation)
+    .filter((item) => item.name)
+    .forEach((item) => {
+      const key = `${normalizeTextKey(item.category)}:${normalizeTextKey(item.name)}`;
+      itemsByKey.set(key, itemsByKey.has(key) ? mergePackingItem(itemsByKey.get(key), item) : item);
+    });
+  const categories = new Map();
+  [...itemsByKey.values()]
+    .sort((a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name))
+    .forEach((item) => {
+      const category = item.category || "General";
+      categories.set(category, [...(categories.get(category) || []), item]);
+    });
+  return {
+    selectedListIds: [...selectedIds],
+    selectedLists: selectedLists.map((list) => ({ id: list.id, title: list.title })),
+    categories: [...categories.entries()].map(([name, items]) => ({
+      name,
+      items: items.sort((a, b) => a.name.localeCompare(b.name)),
+    })),
+  };
+}
+
 function parseScoutIdsParam(value) {
   return String(value || "")
     .split(",")
@@ -214,6 +286,7 @@ async function scopedPayload(actor) {
     patrols: data.patrols,
     events: data.events,
     holidays: data.holidays,
+    packingLists: data.packingLists || [],
     eventRegistrations: (data.eventRegistrations || []).filter((registration) => allowedScoutIds.has(registration.personId) || adultIds.has(registration.personId) || registration.personId === actorPersonId(actor)),
   };
 }
@@ -444,6 +517,8 @@ function publicEventSummary(event, includeInlineImages = false, includePrivateFi
     repeatMonthlyPattern: event.repeatMonthlyPattern,
     repeatMonthlyOrdinal: event.repeatMonthlyOrdinal,
     repeatMonthlyWeekday: event.repeatMonthlyWeekday,
+    packingListIds: Array.isArray(event.packingListIds) ? event.packingListIds : [],
+    packingItems: Array.isArray(event.packingItems) ? event.packingItems : [],
   };
 
   return includePrivateFields ? summary : stripPrivateEventFields(summary);
@@ -504,6 +579,7 @@ async function publicPayload(reqUrl, includePrivateFields = false) {
       events: enrichedEvents.map((event) => publicEventSummary(event, true, includePrivateFields)),
       patrols: payload.patrols,
       holidays: (payload.holidays || []).map(normalizeHoliday),
+      packingLists: payload.packingLists || [],
     };
   });
 }
@@ -526,7 +602,9 @@ async function publicEventDetailPayload(eventId, includePrivateFields = false) {
       }
     }
     const enrichedEvent = enrichPublicFeaturedEventMedia([event])[0];
-    return { data: publicEventSummary(enrichedEvent, true, includePrivateFields) };
+    const summary = publicEventSummary(enrichedEvent, true, includePrivateFields);
+    summary.collatedPackingList = await collateEventPackingList(enrichedEvent);
+    return { data: summary };
   });
 }
 
@@ -585,6 +663,11 @@ async function handleApi(req, res) {
 
   if (req.method === "GET" && url.pathname === "/api/holidays") {
     json(res, 200, { holidays: await loadHolidays() });
+    return true;
+  }
+
+  if (req.method === "GET" && url.pathname === "/api/packing-lists") {
+    json(res, 200, { packingLists: await loadPackingLists() });
     return true;
   }
 
@@ -772,6 +855,40 @@ async function handleApi(req, res) {
     await orm.saveHolidays(Array.isArray(body.holidays) ? body.holidays : []);
     invalidateReadCaches();
     json(res, 200, { ok: true });
+    return true;
+  }
+
+  if (req.method === "POST" && url.pathname === "/api/packing-lists") {
+    const actor = await requireActor(req, res, hasOperationalWriteAccess);
+    if (!actor) return true;
+    const body = JSON.parse((await readBody(req)) || "{}");
+    await orm.savePackingLists(Array.isArray(body.packingLists) ? body.packingLists : []);
+    invalidateReadCaches();
+    json(res, 200, { ok: true });
+    return true;
+  }
+
+  if (req.method === "DELETE" && url.pathname.startsWith("/api/packing-lists/")) {
+    const actor = await requireActor(req, res, hasOperationalWriteAccess);
+    if (!actor) return true;
+    const packingListId = decodeURIComponent(url.pathname.slice("/api/packing-lists/".length));
+    const data = await loadDataPayload();
+    const referencedEvents = (data.events || []).filter((event) => (event.packingListIds || []).includes(packingListId));
+    if (referencedEvents.length) {
+      json(res, 409, {
+        error: `Packing list is used by ${referencedEvents.length} event${referencedEvents.length === 1 ? "" : "s"} and cannot be deleted.`,
+        events: referencedEvents.map((event) => ({ id: event.id, title: event.title })),
+      });
+      return true;
+    }
+    const nextPackingLists = (data.packingLists || []).filter((list) => String(list.id) !== packingListId);
+    if (nextPackingLists.length === (data.packingLists || []).length) {
+      json(res, 404, { error: "Packing list not found" });
+      return true;
+    }
+    await orm.savePackingLists(nextPackingLists);
+    invalidateReadCaches();
+    json(res, 200, { ok: true, deleted: true });
     return true;
   }
 
