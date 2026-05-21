@@ -83,9 +83,12 @@ test("ORM protects broad data while keeping public payload available", async () 
     assert.equal(publicResult.response.status, 200);
     assert.ok(Array.isArray(publicResult.payload.events));
     assert.equal(typeof publicResult.payload.events[0].registrationRequired, "boolean");
-    assert.equal(publicResult.payload.events[0].homeBase, undefined);
-    assert.equal(publicResult.payload.events[0].startDate, undefined);
-    assert.equal(publicResult.payload.events[0].endDate, undefined);
+    assert.equal(publicResult.payload.events[0].homeBase, null);
+    assert.equal(publicResult.payload.events[0].homeBaseHidden, true);
+    assert.equal(publicResult.payload.events[0].startDate, null);
+    assert.equal(publicResult.payload.events[0].startDateHidden, true);
+    assert.equal(publicResult.payload.events[0].endDate, null);
+    assert.equal(publicResult.payload.events[0].endDateHidden, true);
     assert.equal(publicResult.payload.scouts, undefined);
 
     const eventsResult = await request(baseUrl, "/api/events?startDate=2026-04-01&endDate=2026-04-30&page=1&pageSize=2");
@@ -99,17 +102,23 @@ test("ORM protects broad data while keeping public payload available", async () 
     assert.equal(eventDetailResult.response.status, 200);
     assert.equal(eventDetailResult.payload.event.id, eventsResult.payload.events[0].id);
     assert.equal(typeof eventDetailResult.payload.event.registrationRequired, "boolean");
-    assert.equal(eventDetailResult.payload.event.homeBase, undefined);
-    assert.equal(eventDetailResult.payload.event.startDate, undefined);
-    assert.equal(eventDetailResult.payload.event.endDate, undefined);
+    assert.equal(eventDetailResult.payload.event.homeBase, null);
+    assert.equal(eventDetailResult.payload.event.homeBaseHidden, true);
+    assert.equal(eventDetailResult.payload.event.startDate, null);
+    assert.equal(eventDetailResult.payload.event.startDateHidden, true);
+    assert.equal(eventDetailResult.payload.event.endDate, null);
+    assert.equal(eventDetailResult.payload.event.endDateHidden, true);
     assert.equal(eventDetailResult.payload.event.gallery, undefined);
 
     const publicEventDetailResult = await request(baseUrl, `/api/public/events/${eventsResult.payload.events[0].id}`);
     assert.equal(publicEventDetailResult.response.status, 200);
     assert.equal(publicEventDetailResult.payload.data.id, eventsResult.payload.events[0].id);
-    assert.equal(publicEventDetailResult.payload.data.homeBase, undefined);
-    assert.equal(publicEventDetailResult.payload.data.startDate, undefined);
-    assert.equal(publicEventDetailResult.payload.data.endDate, undefined);
+    assert.equal(publicEventDetailResult.payload.data.homeBase, null);
+    assert.equal(publicEventDetailResult.payload.data.homeBaseHidden, true);
+    assert.equal(publicEventDetailResult.payload.data.startDate, null);
+    assert.equal(publicEventDetailResult.payload.data.startDateHidden, true);
+    assert.equal(publicEventDetailResult.payload.data.endDate, null);
+    assert.equal(publicEventDetailResult.payload.data.endDateHidden, true);
 
     const broadResult = await request(baseUrl, "/api/data");
     assert.equal(broadResult.response.status, 401);

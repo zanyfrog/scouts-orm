@@ -18,6 +18,7 @@ const {
   canAccessScout,
   canRegisterForPerson,
   applyScoutPatch,
+  hasPermission,
 } = require("../services/access-policy");
 const eventImageReferencesFile = path.join(orm.dataDir, "event-image-references.json");
 
@@ -32,6 +33,19 @@ const openApiDocument = {
 };
 
 const readCache = new Map();
+const fallbackSecurityPolicy = {
+  permissionVersion: 0,
+  fieldGroups: [
+    {
+      resource: "event",
+      code: "private_details",
+      viewPermission: "event.private_details.view",
+      hiddenBehavior: "placeholder",
+      fields: ["startDate", "endDate", "homeBase", "location", "registrationRequired"],
+    },
+  ],
+};
+let securityPolicyCache = { value: fallbackSecurityPolicy, expiresAt: 0 };
 
 function cloneForCache(value) {
   return value === undefined ? undefined : JSON.parse(JSON.stringify(value));
@@ -144,6 +158,45 @@ async function authenticate(req, { allowPublic = false } = {}) {
     throw error;
   }
   return payload;
+}
+
+function anonymousActor() {
+  return {
+    authenticated: false,
+    globalRoles: [roles.PUBLIC],
+    unitRoles: [],
+    relationships: [],
+    effectivePermissions: ["event.view.public"],
+    permissionVersion: 0,
+  };
+}
+
+async function fetchSecurityPolicy() {
+  if (securityPolicyCache.expiresAt > Date.now()) {
+    return securityPolicyCache.value;
+  }
+  try {
+    const response = await fetch(`${authBaseUrl}/api/security/policy-snapshot`, {
+      headers: { "X-Internal-Service-Token": internalServiceToken },
+    });
+    if (!response.ok) {
+      throw new Error("Policy snapshot unavailable");
+    }
+    const snapshot = await response.json();
+    securityPolicyCache = {
+      value: {
+        ...snapshot,
+        fieldGroups: Array.isArray(snapshot.fieldGroups) ? snapshot.fieldGroups : [],
+      },
+      expiresAt: Date.now() + Math.max(readCacheTtlMs, 1000),
+    };
+  } catch (error) {
+    securityPolicyCache = {
+      value: fallbackSecurityPolicy,
+      expiresAt: Date.now() + Math.max(readCacheTtlMs, 1000),
+    };
+  }
+  return securityPolicyCache.value;
 }
 
 async function requireActor(req, res, predicate) {
@@ -476,7 +529,54 @@ function stripPrivateEventFields(event) {
   return publicEvent;
 }
 
-function publicEventSummary(event, includeInlineImages = false, includePrivateFields = false) {
+function applyHiddenBehavior(data, fieldName, hiddenBehavior) {
+  if (hiddenBehavior === "omit") {
+    delete data[fieldName];
+    return;
+  }
+  if (hiddenBehavior === "mask") {
+    data[fieldName] = data[fieldName] ? "Hidden" : null;
+    data[`${fieldName}Masked`] = true;
+    return;
+  }
+  data[fieldName] = null;
+  data[`${fieldName}Hidden`] = true;
+  if (hiddenBehavior === "placeholder") {
+    data[`${fieldName}Message`] = "Sign in or request access to view.";
+  }
+}
+
+function canViewFieldGroup(actor, group, record) {
+  if (!group.viewPermission) {
+    return true;
+  }
+  if (hasPermission(actor, group.viewPermission)) {
+    return true;
+  }
+  if (group.resource === "event" && group.code === "private_details") {
+    return hasPermission(actor, "event.private_details.view");
+  }
+  return false;
+}
+
+async function applyFieldGroups(actor, resource, recordData, record) {
+  const policy = await fetchSecurityPolicy();
+  const data = { ...recordData };
+  const currentActor = actor || anonymousActor();
+  for (const group of policy.fieldGroups || []) {
+    if (group.resource !== resource || canViewFieldGroup(currentActor, group, record)) {
+      continue;
+    }
+    for (const fieldName of group.fields || []) {
+      if (Object.prototype.hasOwnProperty.call(data, fieldName)) {
+        applyHiddenBehavior(data, fieldName, group.hiddenBehavior || "redact");
+      }
+    }
+  }
+  return data;
+}
+
+async function publicEventSummary(event, includeInlineImages = false, actor = null) {
   let gallery = Array.isArray(event?.gallery)
     ? event.gallery
         .map((item) => (typeof item === "string" ? { src: item } : item))
@@ -521,7 +621,7 @@ function publicEventSummary(event, includeInlineImages = false, includePrivateFi
     packingItems: Array.isArray(event.packingItems) ? event.packingItems : [],
   };
 
-  return includePrivateFields ? summary : stripPrivateEventFields(summary);
+  return applyFieldGroups(actor || anonymousActor(), "event", summary, event);
 }
 
 function buildEventsQueryKey(url) {
@@ -567,16 +667,16 @@ async function hydrateFeaturedEventMedia(events) {
   });
 }
 
-async function publicPayload(reqUrl, includePrivateFields = false) {
+async function publicPayload(reqUrl, actor = null) {
   const url = new URL(reqUrl, "http://localhost");
-  return readThroughCache(cacheKey(["public-payload", url.search, includePrivateFields ? "private" : "public"]), async () => {
+  return readThroughCache(cacheKey(["public-payload", url.search, actor?.permissionVersion || 0, (actor?.effectivePermissions || []).join(",")]), async () => {
     const eventPage = await loadPublicEventsResult(reqUrl);
     const sourceEvents = Array.isArray(eventPage.events) ? eventPage.events : [];
     const hydratedEvents = await hydrateFeaturedEventMedia(sourceEvents);
     const enrichedEvents = dedupePublicEventMedia(enrichPublicFeaturedEventMedia(hydratedEvents));
     const payload = await loadDataPayload();
     return {
-      events: enrichedEvents.map((event) => publicEventSummary(event, true, includePrivateFields)),
+      events: await Promise.all(enrichedEvents.map((event) => publicEventSummary(event, true, actor))),
       patrols: payload.patrols,
       holidays: (payload.holidays || []).map(normalizeHoliday),
       packingLists: payload.packingLists || [],
@@ -584,8 +684,8 @@ async function publicPayload(reqUrl, includePrivateFields = false) {
   });
 }
 
-async function publicEventDetailPayload(eventId, includePrivateFields = false) {
-  return readThroughCache(cacheKey(["public-event-detail", eventId, includePrivateFields ? "private" : "public"]), async () => {
+async function publicEventDetailPayload(eventId, actor = null) {
+  return readThroughCache(cacheKey(["public-event-detail", eventId, actor?.permissionVersion || 0, (actor?.effectivePermissions || []).join(",")]), async () => {
     const summaryEvent = await fetchPublicOrmEventSummary(eventId);
     if (!summaryEvent) {
       return null;
@@ -602,7 +702,7 @@ async function publicEventDetailPayload(eventId, includePrivateFields = false) {
       }
     }
     const enrichedEvent = enrichPublicFeaturedEventMedia([event])[0];
-    const summary = publicEventSummary(enrichedEvent, true, includePrivateFields);
+    const summary = await publicEventSummary(enrichedEvent, true, actor);
     summary.collatedPackingList = await collateEventPackingList(enrichedEvent);
     return { data: summary };
   });
@@ -657,7 +757,7 @@ async function handleApi(req, res) {
 
   if (req.method === "GET" && url.pathname === "/api/public") {
     const actor = await resolvePublicActor(req);
-    json(res, 200, await publicPayload(req.url, Boolean(actor)));
+    json(res, 200, await publicPayload(req.url, actor));
     return true;
   }
 
@@ -698,7 +798,7 @@ async function handleApi(req, res) {
   if (req.method === "GET" && url.pathname.startsWith("/api/public/events/")) {
     const eventId = decodeURIComponent(url.pathname.replace("/api/public/events/", ""));
     const actor = await resolvePublicActor(req);
-    const payload = await publicEventDetailPayload(eventId, Boolean(actor));
+    const payload = await publicEventDetailPayload(eventId, actor);
     json(res, payload ? 200 : 404, payload || { error: "Event not found" });
     return true;
   }
@@ -734,7 +834,7 @@ async function handleApi(req, res) {
     const enrichedEvents = enrichCalendarEventMedia(sourceEvents);
     json(res, 200, {
       ...payload,
-      events: enrichedEvents.map((event) => publicEventSummary(event, true, Boolean(actor))),
+      events: await Promise.all(enrichedEvents.map((event) => publicEventSummary(event, true, actor))),
     });
     return true;
   }
@@ -745,7 +845,7 @@ async function handleApi(req, res) {
     const event = url.searchParams.get("includeMedia") === "false"
       ? await fetchPublicOrmEventSummary(eventId)
       : await fetchFullOrmEvent(eventId);
-    json(res, event ? 200 : 404, event ? { event: Boolean(actor) ? event : stripPrivateEventFields(event) } : { error: "Event not found" });
+    json(res, event ? 200 : 404, event ? { event: await publicEventSummary(event, true, actor) } : { error: "Event not found" });
     return true;
   }
 
