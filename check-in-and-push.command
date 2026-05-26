@@ -36,12 +36,8 @@ echo "Current status:"
 git status --short --branch
 echo
 
-read -r "?Commit message: " commit_message
-if [ -z "${commit_message//[[:space:]]/}" ]; then
-  echo "A commit message is required."
-  read -r "?Press Return to close..."
-  exit 1
-fi
+commit_message="${project_name} check-in $(date '+%Y-%m-%d %H:%M:%S')"
+echo "Commit message: ${commit_message}"
 
 echo
 echo "Staging all changes..."

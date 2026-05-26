@@ -33,6 +33,7 @@ const openApiDocument = {
 };
 
 const readCache = new Map();
+let eventImageSourcesCache = null;
 const fallbackSecurityPolicy = {
   permissionVersion: 0,
   fieldGroups: [
@@ -41,7 +42,7 @@ const fallbackSecurityPolicy = {
       code: "private_details",
       viewPermission: "event.private_details.view",
       hiddenBehavior: "placeholder",
-      fields: ["startDate", "endDate", "homeBase", "location", "registrationRequired"],
+      fields: ["startDate", "endDate", "homeBase", "location"],
     },
   ],
 };
@@ -183,10 +184,13 @@ async function fetchSecurityPolicy() {
       throw new Error("Policy snapshot unavailable");
     }
     const snapshot = await response.json();
+    if (!Array.isArray(snapshot.fieldGroups)) {
+      throw new Error("Policy snapshot missing field groups");
+    }
     securityPolicyCache = {
       value: {
         ...snapshot,
-        fieldGroups: Array.isArray(snapshot.fieldGroups) ? snapshot.fieldGroups : [],
+        fieldGroups: snapshot.fieldGroups,
       },
       expiresAt: Date.now() + Math.max(readCacheTtlMs, 1000),
     };
@@ -377,13 +381,31 @@ function normalizeHoliday(record) {
 }
 
 function readEventImageSources() {
+  let stat = null;
+  try {
+    stat = fs.statSync(eventImageReferencesFile);
+  } catch (error) {
+    return { publicImage: "", inlineImages: [], photoImages: [], smallPhotoImages: [] };
+  }
+  if (
+    eventImageSourcesCache &&
+    eventImageSourcesCache.mtimeMs === stat.mtimeMs &&
+    eventImageSourcesCache.size === stat.size
+  ) {
+    return eventImageSourcesCache.value;
+  }
   const references = readJsonFile(eventImageReferencesFile, {});
   const values = Object.values(references).filter((value) => typeof value === "string" && value.trim());
   const publicImage = values.find((value) => /^https?:\/\//i.test(value)) || "";
   const inlineImages = values.filter((value) => /^data:image\//i.test(value));
   const photoImages = inlineImages.filter((value) => !/^data:image\/svg/i.test(value));
   const smallPhotoImages = photoImages.filter((value) => value.length < 50000);
-  return { publicImage, inlineImages, photoImages, smallPhotoImages };
+  eventImageSourcesCache = {
+    mtimeMs: stat.mtimeMs,
+    size: stat.size,
+    value: { publicImage, inlineImages, photoImages, smallPhotoImages },
+  };
+  return eventImageSourcesCache.value;
 }
 
 function isPublicImageReference(value) {
@@ -493,15 +515,23 @@ function enrichCalendarEventMedia(events) {
   });
 }
 
-function enrichPublicFeaturedEventMedia(events) {
-  const sources = readEventImageSources();
+function enrichPublicFeaturedEventMedia(events, options = {}) {
+  const useFallbackImages = options.useFallbackImages !== false;
   const featuredIds = publicFeaturedImageEventIds(events);
+  const needsFallbackImage = useFallbackImages && (Array.isArray(events) ? events : []).some((event) => {
+    if (!featuredIds.has(event?.id)) {
+      return false;
+    }
+    const gallery = Array.isArray(event?.gallery) ? event.gallery : [];
+    return !String(event?.image || "").trim() && !gallery.some((item) => String(item?.src || item?.image || item || "").trim());
+  });
+  const sources = needsFallbackImage ? readEventImageSources() : null;
   return (Array.isArray(events) ? events : []).map((event, index) => {
     if (!featuredIds.has(event?.id)) {
       return event;
     }
     const gallery = Array.isArray(event?.gallery) ? event.gallery : [];
-    const image = String(event?.image || "").trim() || publicFallbackImageForEvent(event, index, sources);
+    const image = String(event?.image || "").trim() || (sources ? publicFallbackImageForEvent(event, index, sources) : "");
     return {
       ...event,
       image,
@@ -608,7 +638,7 @@ async function publicEventSummary(event, includeInlineImages = false, actor = nu
     activities: Array.isArray(event.activities) ? event.activities : [],
     registrationRequired: Boolean(event.registrationRequired),
     image,
-    gallery,
+    gallery: Array.isArray(event?.gallery) ? gallery : undefined,
     upcoming: event.upcoming,
     repeatEnabled: event.repeatEnabled,
     repeatFrequency: event.repeatFrequency,
@@ -672,14 +702,12 @@ async function publicPayload(reqUrl, actor = null) {
   return readThroughCache(cacheKey(["public-payload", url.search, actor?.permissionVersion || 0, (actor?.effectivePermissions || []).join(",")]), async () => {
     const eventPage = await loadPublicEventsResult(reqUrl);
     const sourceEvents = Array.isArray(eventPage.events) ? eventPage.events : [];
-    const hydratedEvents = await hydrateFeaturedEventMedia(sourceEvents);
-    const enrichedEvents = dedupePublicEventMedia(enrichPublicFeaturedEventMedia(hydratedEvents));
-    const payload = await loadDataPayload();
+    const enrichedEvents = dedupePublicEventMedia(enrichPublicFeaturedEventMedia(sourceEvents, { useFallbackImages: false }));
     return {
       events: await Promise.all(enrichedEvents.map((event) => publicEventSummary(event, true, actor))),
-      patrols: payload.patrols,
-      holidays: (payload.holidays || []).map(normalizeHoliday),
-      packingLists: payload.packingLists || [],
+      patrols: [],
+      holidays: [],
+      packingLists: [],
     };
   });
 }
@@ -712,14 +740,23 @@ async function publicEventMediaSource(eventId, mediaPath) {
   return readThroughCache(cacheKey(["public-event-media", eventId, mediaPath]), async () => {
     const event = await fetchFullOrmEvent(eventId);
     if (!event) return "";
+    const fallbackEvent = () => enrichPublicFeaturedEventMedia([event])[0] || event;
     if (mediaPath === "primary") {
-      return String(event.image || "").trim();
+      return String(event.image || fallbackEvent().image || "").trim();
     }
     const galleryMatch = String(mediaPath || "").match(/^gallery\/(\d+)$/);
     if (!galleryMatch) return "";
     const galleryIndex = Number(galleryMatch[1]);
     const galleryItem = Array.isArray(event.gallery) ? event.gallery[galleryIndex] : null;
-    return String((typeof galleryItem === "string" ? galleryItem : galleryItem?.src || galleryItem?.image) || "").trim();
+    const fallbackGallery = Array.isArray(event.gallery) && event.gallery.length
+      ? event.gallery
+      : fallbackEvent().gallery;
+    const fallbackGalleryItem = Array.isArray(fallbackGallery) ? fallbackGallery[galleryIndex] : null;
+    return String(
+      (typeof galleryItem === "string" ? galleryItem : galleryItem?.src || galleryItem?.image) ||
+      (typeof fallbackGalleryItem === "string" ? fallbackGalleryItem : fallbackGalleryItem?.src || fallbackGalleryItem?.image) ||
+      ""
+    ).trim();
   });
 }
 

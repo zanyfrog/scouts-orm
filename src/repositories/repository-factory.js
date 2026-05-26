@@ -1,9 +1,9 @@
 "use strict";
 
-const fileRepository = require("./file");
+const csvStore = require("../stores/csv/adapter");
 
 function createRepository() {
-  return fileRepository;
+  return csvStore;
 }
 
 module.exports = {

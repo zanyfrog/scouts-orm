@@ -13,23 +13,26 @@ New code should go under `src/`; keep root files thin.
 ## Module Ownership
 
 - `src/http/` owns request parsing, routing, and HTTP responses.
+- `src/query/` owns storage-independent query planning, schema metadata, predicates, and projection.
 - `src/services/` owns business rules such as access policy and dashboard scoping.
 - `src/config/` owns environment variable parsing and defaults.
-- `src/repositories/file/` owns CSV/JSON-backed persistence and import/export normalization.
-- `src/repositories/postgres/` owns Postgres persistence, SQL row mapping, transactions, and schema setup.
+- `src/stores/csv/` owns CSV/JSON-backed persistence and import/export normalization.
+- `src/stores/postgres/` owns Postgres persistence, SQL row mapping, transactions, SQL building, and schema setup.
+- `src/repositories/file/` and `src/repositories/postgres/` are compatibility wrappers for older imports.
 - `src/repositories/repository-factory.js` selects the repository facade exposed from `index.js`.
 
 ## Data Store Direction
 
-CSV/JSON remains the default store for now. The long-term direction is relational storage, so new persistence behavior should be added behind the repository facade first. Avoid making HTTP routes know whether the data came from CSV or Postgres.
+CSV/JSON remains the default store for now. The long-term direction is a shared query interface that can target either CSV or Postgres. New read behavior should use `select(resource, query, context)` where practical so the query planner can remove restricted field-group columns before the store adapter reads or materializes rows. Avoid making HTTP routes know whether the data came from CSV or Postgres.
 
 ## Adding A Field
 
 1. Add the normalized JavaScript field in the relevant domain/read/write mapper.
-2. Add CSV header and CSV row mapping in `src/repositories/file/`.
-3. Add Postgres column, row mapper, and write mapping in `src/repositories/postgres/`.
-4. Add or update a migration in `src/migrations/`.
-5. Add a repository or authorization test that proves the field survives a read/write round trip.
+2. Add query schema metadata in `src/query/schema.js` if the field can be selected.
+3. Add CSV header and CSV row mapping in `src/stores/csv/`.
+4. Add Postgres column, row mapper, and write mapping in `src/stores/postgres/`.
+5. Add or update a migration in `src/migrations/`.
+6. Add a repository or authorization test that proves the field survives a read/write round trip.
 
 ## Adding A Route
 
