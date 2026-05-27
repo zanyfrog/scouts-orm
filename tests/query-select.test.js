@@ -52,3 +52,11 @@ test("CSV select rejects filters on restricted field-group columns", () => {
     /restricted field/,
   );
 });
+
+test("security resource catalog is derived from query schema and collapses duplicates", () => {
+  const catalog = orm.listSecurityResourceCatalog();
+
+  assert.deepEqual(catalog.map((resource) => resource.code), ["event", "person", "scout"]);
+  assert.equal(catalog.filter((resource) => resource.code === "person").length, 1);
+  assert.equal(catalog.find((resource) => resource.code === "event").name, "Event");
+});

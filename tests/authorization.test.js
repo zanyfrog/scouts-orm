@@ -69,6 +69,30 @@ async function request(baseUrl, path, options = {}) {
   return { response, payload };
 }
 
+test("ORM exposes an internal security resource catalog from query schema", async () => {
+  process.env.INTERNAL_SERVICE_TOKEN = "resource-catalog-test";
+  delete require.cache[require.resolve("../server")];
+  const { server } = require("../server");
+  const port = await listen(server);
+  const baseUrl = `http://127.0.0.1:${port}`;
+
+  try {
+    const denied = await request(baseUrl, "/api/security/resource-catalog", {
+      headers: { "X-Internal-Service-Token": "wrong" },
+    });
+    assert.equal(denied.response.status, 403);
+
+    const result = await request(baseUrl, "/api/security/resource-catalog", {
+      headers: { "X-Internal-Service-Token": "resource-catalog-test" },
+    });
+    assert.equal(result.response.status, 200);
+    assert.deepEqual(result.payload.resources.map((resource) => resource.code), ["event", "person", "scout"]);
+    assert.equal(result.payload.resources.filter((resource) => resource.code === "person").length, 1);
+  } finally {
+    await close(server);
+  }
+});
+
 test("ORM protects broad data while keeping public payload available", async () => {
   const authServer = createAuthServer();
   const authPort = await listen(authServer);

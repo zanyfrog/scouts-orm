@@ -5,5 +5,6 @@ module.exports = {
   ...require("./planner"),
   ...require("./predicates"),
   ...require("./projection"),
+  ...require("./resource-catalog"),
   ...require("./schema"),
 };

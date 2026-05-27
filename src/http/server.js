@@ -864,6 +864,15 @@ async function handleApi(req, res) {
     return true;
   }
 
+  if (req.method === "GET" && url.pathname === "/api/security/resource-catalog") {
+    if (!isInternalServiceRequest(req)) {
+      forbidden(res, { authenticated: false });
+      return true;
+    }
+    json(res, 200, { resources: orm.listSecurityResourceCatalog() });
+    return true;
+  }
+
   if (req.method === "GET" && url.pathname === "/api/events") {
     const actor = await resolvePublicActor(req);
     const payload = await loadPublicEventsResult(req.url);
